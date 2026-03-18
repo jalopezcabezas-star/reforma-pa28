@@ -233,6 +233,14 @@ select.estado-select:focus, select.pago-select:focus {
   border-radius: 4px;
   min-width: 100%;
 }
+.gantt-cell {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gantt-cell:hover {
+  background: rgba(45,106,79,0.12) !important;
+}
 .gantt-phase {
   font-weight: 700;
   font-size: 12px;
@@ -651,34 +659,34 @@ select.estado-select:focus, select.pago-select:focus {
     <div class="stats-grid" id="dashStats"></div>
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Progreso General</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Progreso General</div>
         <div class="progress-ring-container" id="dashRing"></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Fases del Gantt</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Fases del Gantt</div>
         <div id="dashPhaseProgress"></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Resumen Financiero</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Resumen Financiero</div>
         <div id="dashFinancial"></div>
       </div>
     </div>
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Calendario de Pagos</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Calendario de Pagos</div>
         <div id="dashAllPayments"></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Fechas Clave</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Fechas Clave</div>
         <div id="dashTimeline"></div>
       </div>
       <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:13px;margin-bottom:8px">Materiales</div>
+        <div class="card-title" style="font-size:14px;margin-bottom:8px">Materiales</div>
         <div id="dashMateriales"></div>
       </div>
     </div>
     <div class="card" style="padding:12px">
-      <div class="card-title" style="font-size:13px;margin-bottom:8px">Todas las Tareas</div>
+      <div class="card-title" style="font-size:14px;margin-bottom:8px">Todas las Tareas</div>
       <div id="dashActiveTasks"></div>
     </div>
   </div>
@@ -907,6 +915,42 @@ function getTotalPagado() { return data.pagos.filter(p => p.pagado).reduce((s,p)
 function getTotalPendiente() { return getJAPagar() - getTotalPagado(); }
 function getMatGastado() { return data.materiales.reduce((s,m) => s + (m.importe || 0), 0); }
 
+// Current week number relative to the Gantt timeline (can be negative for pre-weeks)
+function getCurrentWeekNum() {
+  const inicio = getFechaInicio();
+  const baseDate = new Date(inicio);
+  const dow = baseDate.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  baseDate.setDate(baseDate.getDate() + diff);
+  const now = new Date();
+  const msDiff = now - baseDate;
+  const weekNum = Math.floor(msDiff / (7 * 24 * 60 * 60 * 1000)) + 1;
+  return weekNum;
+}
+
+// Auto-calculate task status from Gantt weeks vs current week
+function getTaskEstado(ganttTask) {
+  const curWeek = getCurrentWeekNum();
+  const weeks = ganttTask.weeks;
+  if (weeks.length === 0) return 'Sin empezar';
+  const minW = Math.min(...weeks);
+  const maxW = Math.max(...weeks);
+  if (curWeek > maxW) return 'Terminado';
+  if (curWeek >= minW && curWeek <= maxW) return 'En curso';
+  return 'Sin empezar';
+}
+
+// Sync gantt-derived status to linked presupuesto items
+function syncGanttToPresupuesto() {
+  data.ganttTasks.forEach(t => {
+    if (t.presupId !== null) {
+      const pi = data.presupuesto.find(p => p.id === t.presupId);
+      if (pi) pi.estado = getTaskEstado(t);
+    }
+  });
+  saveData();
+}
+
 function updateLastPayment() {
   const last = data.pagos.find(p => p.isLast);
   if (last) {
@@ -971,15 +1015,15 @@ function renderDashboard() {
   const costeTotal = data.presupuesto.reduce((s,p) => s + p.coste, 0);
   const costeTerminado = data.presupuesto.filter(p=>p.estado==='Terminado').reduce((s,p) => s + p.coste, 0);
   const costeCurso = data.presupuesto.filter(p=>p.estado==='En curso').reduce((s,p) => s + p.coste, 0);
-  // Count gantt-only tasks (presupId===null) - they have no cost, so use task count approach
+  // Count gantt-only tasks (presupId===null) - auto-calculate status from timeline
   const ganttOnly = data.ganttTasks.filter(t => t.presupId === null);
   const totalTasks = total + ganttOnly.length;
-  // For gantt-only tasks: treat as "En curso" if no presupuesto link
-  const ganttOnlyCurso = ganttOnly.length; // Fase 0 tasks are "En curso" by default
+  const ganttOnlyTerminado = ganttOnly.filter(t => getTaskEstado(t) === 'Terminado').length;
+  const ganttOnlyCurso = ganttOnly.filter(t => getTaskEstado(t) === 'En curso').length;
   // Blended progress: weight presupuesto by cost, gantt-only tasks each count as avg cost
   const avgCost = costeTotal > 0 ? costeTotal / total : 1;
   const virtualTotal = costeTotal + ganttOnly.length * avgCost;
-  const virtualTerminado = costeTerminado;
+  const virtualTerminado = costeTerminado + ganttOnlyTerminado * avgCost;
   const virtualCurso = costeCurso + ganttOnlyCurso * avgCost;
   const pctWeighted = virtualTotal > 0 ? Math.round(((virtualTerminado + virtualCurso * 0.5) / virtualTotal) * 100) : 0;
 
@@ -988,10 +1032,10 @@ function renderDashboard() {
   const totalSinEmpAll = sinEmp;
 
   document.getElementById('dashStats').innerHTML = `
-    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--primary)">${fmt(getTotalReforma())}</div><div class="stat-label">Total Reforma</div></div>
-    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--success)">${fmt(getTotalPagado())}</div><div class="stat-label">Pagado</div></div>
-    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente</div></div>
-    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px">${pctWeighted}%</div><div class="stat-label">Progreso</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(getTotalReforma())}</div><div class="stat-label">Total Reforma</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(getTotalPagado())}</div><div class="stat-label">Pagado</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente</div></div>
+    <div class="stat-card"><div class="stat-value">${pctWeighted}%</div><div class="stat-label">Progreso</div></div>
   `;
 
   // Progress ring (smaller)
@@ -1040,31 +1084,31 @@ function renderDashboard() {
       if (st === 'En curso') curso++;
     });
     const pct = Math.round(((done + curso * 0.5) / tasks.length) * 100);
-    return `<div style="margin-bottom:6px">
-      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>${ph.name}</span><span>${pct}%</span></div>
-      <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:3px;transition:width 0.5s"></div></div>
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>${ph.name}</span><span><strong>${pct}%</strong></span></div>
+      <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:4px;transition:width 0.5s"></div></div>
     </div>`;
   }).join('');
 
   // Financial (compact)
   document.getElementById('dashFinancial').innerHTML = `
-    <div style="font-size:11px;">
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+    <div style="font-size:13px;">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Presupuesto J.A.</span><strong>${fmt(getJATotal())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Mat. incluidos</span><strong>-${fmt(data.jaMaterialesIncluidos)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
         <span>A pagar J.A.</span><strong>${fmt(getJAPagar())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Mis compras</span><strong>${fmt(getMisCompras())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Ya pagado</span><strong style="color:var(--success)">${fmt(getTotalPagado())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:700;font-size:13px;color:var(--danger)">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;font-size:15px;color:var(--danger)">
         <span>TOTAL REFORMA</span><strong>${fmt(getTotalReforma())}</strong>
       </div>
     </div>
@@ -1076,8 +1120,8 @@ function renderDashboard() {
     const bg = isPaid ? '#d8f3dc' : 'transparent';
     const icon = isPaid ? '&#10003;' : '&#9675;';
     const iconColor = isPaid ? '#0d904f' : '#aaa';
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;background:${bg};padding:3px 4px;border-radius:4px;margin-bottom:2px">
-      <span><span style="color:${iconColor};font-size:13px;margin-right:4px">${icon}</span>Pago ${p.id}${p.isLast?' (ult.)':''} · ${fmtDate(p.fecha)}</span>
+    return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;background:${bg};padding:5px 6px;border-radius:4px;margin-bottom:3px;border-bottom:1px solid var(--border)">
+      <span><span style="color:${iconColor};font-size:15px;margin-right:5px">${icon}</span>Pago ${p.id}${p.isLast?' (ult.)':''} · ${fmtDate(p.fecha)}</span>
       <strong>${fmt(p.importe)}</strong>
     </div>`;
   }).join('');
@@ -1091,22 +1135,22 @@ function renderDashboard() {
   const diasRestantes = Math.max(0, Math.ceil((fin - now) / (1000*60*60*24)));
   const pctTime = diasTotal > 0 ? Math.min(100, Math.round((diasTranscurridos / diasTotal) * 100)) : 0;
   document.getElementById('dashTimeline').innerHTML = `
-    <div style="font-size:11px">
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+    <div style="font-size:13px">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Inicio reforma</span><strong>${fmtDateLong(inicio)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Fin previsto</span><strong>${fmtDateLong(fin)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Duracion total</span><strong>${diasTotal} dias (${getNumSemanas()} sem.)</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
-        <span>Dias restantes</span><strong style="color:${diasRestantes<=14?'var(--danger)':'var(--text)'}}">${diasRestantes} dias</strong>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span>Dias restantes</span><strong style="color:${diasRestantes<=14?'var(--danger)':'var(--text)'}">${diasRestantes} dias</strong>
       </div>
-      <div style="margin-top:6px">
-        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Tiempo transcurrido</span><span>${pctTime}%</span></div>
-        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:3px"></div></div>
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Tiempo transcurrido</span><span>${pctTime}%</span></div>
+        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:4px"></div></div>
       </div>
     </div>
   `;
@@ -1115,17 +1159,17 @@ function renderDashboard() {
   const matGastado = getMatGastado();
   const matCount = data.materiales.length;
   document.getElementById('dashMateriales').innerHTML = `
-    <div style="font-size:11px">
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+    <div style="font-size:13px">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Articulos comprados</span><strong>${matCount}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Total gastado</span><strong>${fmt(matGastado)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
         <span>Presup. materiales</span><strong>${fmt(getMisCompras())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0">
+      <div style="display:flex;justify-content:space-between;padding:5px 0">
         <span>Restante</span><strong style="color:${getMisCompras()-matGastado>=0?'var(--success)':'var(--danger)'}">${fmt(getMisCompras() - matGastado)}</strong>
       </div>
     </div>
@@ -1135,11 +1179,11 @@ function renderDashboard() {
   const allTasks = data.presupuesto;
   // Also add gantt-only tasks
   const ganttOnlyTasks = data.ganttTasks.filter(t => t.presupId === null).map(t => ({
-    cat: 'Organizacion', concepto: t.name, coste: 0, estado: 'En curso', pagado: '-', isGanttOnly: true
+    cat: 'Organizacion', concepto: t.name, coste: 0, estado: getTaskEstado(t), pagado: '-', isGanttOnly: true
   }));
   const combined = [...ganttOnlyTasks, ...allTasks];
-  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11px"><thead><tr><th style="padding:4px 6px">#</th><th style="padding:4px 6px">Cat.</th><th style="padding:4px 6px">Concepto</th><th style="padding:4px 6px">Coste</th><th style="padding:4px 6px">Estado</th></tr></thead><tbody>
-    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:3px 6px;font-size:10px">${i+1}</td><td style="padding:3px 6px;font-size:10px">${t.cat}</td><td style="padding:3px 6px;font-size:10px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.concepto}</td><td style="padding:3px 6px;font-size:10px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:3px 6px">${estadoBadge(t.estado)}</td></tr>`).join('')}
+  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:13px"><thead><tr><th style="padding:6px 8px">#</th><th style="padding:6px 8px">Cat.</th><th style="padding:6px 8px">Concepto</th><th style="padding:6px 8px">Coste</th><th style="padding:6px 8px">Estado</th></tr></thead><tbody>
+    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:5px 8px">${i+1}</td><td style="padding:5px 8px">${t.cat}</td><td style="padding:5px 8px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.concepto}</td><td style="padding:5px 8px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:5px 8px">${estadoBadge(t.estado)}</td></tr>`).join('')}
   </tbody></table></div>`;
 }
 
@@ -1163,13 +1207,10 @@ function renderPresupuesto() {
       <td style="white-space:nowrap" class="editable" onclick="editPresupField(${i},'coste')"><strong>${fmt(p.coste)}</strong></td>
       <td>${p.tipo}</td>
       <td style="font-size:11px">${p.quien}</td>
-      <td>
-        <select class="estado-select" onchange="changeEstado(${i}, this.value)" style="background:${p.estado==='Terminado'?'#e6f4ea':p.estado==='En curso'?'#fef7e0':'#fce8e6'}">
-          <option ${p.estado==='Sin empezar'?'selected':''}>Sin empezar</option>
-          <option ${p.estado==='En curso'?'selected':''}>En curso</option>
-          <option ${p.estado==='Terminado'?'selected':''}>Terminado</option>
-        </select>
-      </td>
+      <td>${data.ganttTasks.some(g=>g.presupId===p.id)
+        ? '<span title="Controlado por Gantt">'+estadoBadge(p.estado)+'</span>'
+        : '<select class="estado-select" onchange="changeEstado('+i+', this.value)" style="background:'+(p.estado==='Terminado'?'#e6f4ea':p.estado==='En curso'?'#fef7e0':'#fce8e6')+'"><option '+(p.estado==='Sin empezar'?'selected':'')+'>Sin empezar</option><option '+(p.estado==='En curso'?'selected':'')+'>En curso</option><option '+(p.estado==='Terminado'?'selected':'')+'>Terminado</option></select>'
+      }</td>
       <td>
         <select class="pago-select" onchange="changePagado(${i}, this.value)" style="background:${p.pagado==='Pagado'?'#e6f4ea':p.pagado==='Parcial'?'#fef7e0':'#e8f0fe'}">
           <option ${p.pagado==='Sin pagar'?'selected':''}>Sin pagar</option>
@@ -1335,8 +1376,7 @@ function renderGantt() {
     html += `<tr class="fase-header"><td colspan="${numWeeks+3}">${phase.name}</td></tr>`;
     const tasks = data.ganttTasks.filter(t => t.phase === phase.phase);
     for (const task of tasks) {
-      const presupItem = data.presupuesto.find(p => p.id === task.presupId);
-      const estado = presupItem ? presupItem.estado : (task.presupId === null ? 'En curso' : 'Sin empezar');
+      const estado = getTaskEstado(task);
       html += `<tr><td>${taskNum}</td><td style="font-size:11px">${task.name}</td>`;
       for (let i = 0; i < numWeeks; i++) {
         const wn = weekNumbers[i];
@@ -1345,9 +1385,9 @@ function renderGantt() {
         if (hasBar) {
           const pattern = estado === 'Terminado' ? 'background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,0.3) 3px,rgba(255,255,255,0.3) 6px);' : '';
           const opacity = estado === 'Terminado' ? '0.5' : '1';
-          html += `<td class="${isCurrent?'gantt-current-week':''}"><div class="gantt-bar ${task.color}" style="opacity:${opacity};${pattern}"></div></td>`;
+          html += `<td class="gantt-cell ${isCurrent?'gantt-current-week':''}" onclick="toggleGanttWeek(${task.id},${wn})"><div class="gantt-bar ${task.color}" style="opacity:${opacity};${pattern}"></div></td>`;
         } else {
-          html += `<td class="${isCurrent?'gantt-current-week':''}"></td>`;
+          html += `<td class="gantt-cell ${isCurrent?'gantt-current-week':''}" onclick="toggleGanttWeek(${task.id},${wn})"></td>`;
         }
       }
       html += `<td>${estadoBadge(estado)}</td></tr>`;
@@ -1356,6 +1396,21 @@ function renderGantt() {
   }
   html += '</tbody>';
   document.getElementById('ganttTable').innerHTML = html;
+}
+
+function toggleGanttWeek(taskId, weekNum) {
+  const task = data.ganttTasks.find(t => t.id === taskId);
+  if (!task) return;
+  const idx = task.weeks.indexOf(weekNum);
+  if (idx >= 0) {
+    task.weeks.splice(idx, 1);
+  } else {
+    task.weeks.push(weekNum);
+    task.weeks.sort((a,b) => a - b);
+  }
+  saveData();
+  renderAll();
+  showToast('Gantt actualizado');
 }
 
 // ============================================================
@@ -1689,6 +1744,7 @@ function updateDynamicDates() {
 
 function renderAll() {
   updateDynamicDates();
+  syncGanttToPresupuesto();
   renderDashboard();
   renderPresupuesto();
   renderGantt();
