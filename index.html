@@ -595,21 +595,44 @@ select.estado-select:focus, select.pago-select:focus {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .content { padding: 10px; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .stat-card { padding: 12px; }
-  .stat-value { font-size: 20px; }
-  .card { padding: 12px; }
-  td, th { padding: 8px 6px; }
-  .nav-title { font-size: 14px; }
-  .progress-ring, .progress-ring svg { width: 160px; height: 160px; }
-  .progress-ring-pct { font-size: 34px; }
-  .payment-amount { font-size: 15px; }
-}
-@media (max-width: 480px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .content { padding: 8px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .stat-card { padding: 10px; }
   .stat-value { font-size: 18px; }
   .stat-label { font-size: 10px; }
+  .card { padding: 10px; margin-bottom: 10px; }
+  .card-title { font-size: 13px; margin-bottom: 8px; }
+  td, th { padding: 6px 5px; font-size: 11px; }
+  .nav-title { font-size: 13px; }
+  .nav-tab { padding: 8px 12px; font-size: 12px; }
+  .payment-amount { font-size: 14px; }
+  .payment-num { font-size: 13px; }
+  .payment-item { padding: 10px 8px; }
+  .check-circle { width: 24px; height: 24px; }
+  .dash-grid-2col { grid-template-columns: 1fr !important; }
+  .dash-grid-3col { grid-template-columns: 1fr !important; }
+  .hero-total { font-size: 20px !important; }
+  .hero-sub { font-size: 16px !important; }
+  .hero-bar { height: 40px !important; }
+  .hero-bar-text { font-size: 16px !important; }
+  .hero-pad { padding: 14px 16px !important; }
+}
+@media (max-width: 480px) {
+  .content { padding: 6px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 5px; }
+  .stat-value { font-size: 16px; }
+  .stat-label { font-size: 9px; }
+  .card { padding: 8px; margin-bottom: 8px; }
+  .card-title { font-size: 12px; }
+  .hero-total { font-size: 18px !important; }
+  .hero-sub { font-size: 14px !important; }
+  .hero-bar { height: 36px !important; }
+  .hero-bar-text { font-size: 14px !important; }
+  .hero-pad { padding: 12px 12px !important; }
+  .nav-tab { padding: 7px 10px; font-size: 11px; }
+}
+@media (min-width: 769px) {
+  .dash-grid-2col { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -656,29 +679,29 @@ select.estado-select:focus, select.pago-select:focus {
   <!-- DASHBOARD -->
   <div class="tab-content active" id="tab-dashboard">
     <div class="stats-grid" id="dashStats"></div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Progreso General</div>
+    <div class="dash-grid-2col" style="display:grid;gap:10px;margin-bottom:10px">
+      <div class="card" style="padding:10px">
+        <div class="card-title" style="font-size:13px;margin-bottom:6px">Progreso General</div>
         <div class="progress-ring-container" id="dashRing"></div>
       </div>
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Fases del Gantt</div>
+      <div class="card" style="padding:10px">
+        <div class="card-title" style="font-size:13px;margin-bottom:6px">Fases del Gantt</div>
         <div id="dashPhaseProgress"></div>
       </div>
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Resumen Financiero</div>
+    </div>
+    <div class="dash-grid-2col" style="display:grid;gap:10px;margin-bottom:10px">
+      <div class="card" style="padding:10px">
+        <div class="card-title" style="font-size:13px;margin-bottom:6px">Pagos por Categoria</div>
         <div id="dashFinancial"></div>
       </div>
-    </div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Calendario</div>
-        <div id="dashAllPayments"></div>
-      </div>
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Fechas Clave</div>
+      <div class="card" style="padding:10px">
+        <div class="card-title" style="font-size:13px;margin-bottom:6px">Fechas Clave</div>
         <div id="dashTimeline"></div>
       </div>
+    </div>
+    <div class="card" style="padding:10px;margin-bottom:10px">
+      <div class="card-title" style="font-size:13px;margin-bottom:6px">Calendario</div>
+      <div id="dashAllPayments"></div>
     </div>
     <div class="card" style="padding:12px">
       <div class="card-title" style="font-size:14px;margin-bottom:8px">Todas las Tareas</div>
@@ -1022,24 +1045,24 @@ function renderDashboard() {
   const dashTotalPendienteAll = getTotalReforma() - dashTotalPagadoAll;
   const dashPctPagado = getTotalReforma() > 0 ? Math.min(100, Math.round(dashTotalPagadoAll / getTotalReforma() * 100)) : 0;
   document.getElementById('dashStats').innerHTML = `
-    <div style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:16px;padding:20px 24px;box-shadow:0 4px 20px rgba(27,67,50,0.3);color:#fff">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-        <div style="text-align:center;flex:1;min-width:100px">
-          <div style="font-size:11px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Total Reforma</div>
-          <div style="font-size:24px;font-weight:800;margin-top:2px">${fmt(getTotalReforma())}</div>
+    <div class="hero-pad" style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:16px;padding:20px 24px;box-shadow:0 4px 20px rgba(27,67,50,0.3);color:#fff">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
+        <div style="text-align:center;flex:1;min-width:90px">
+          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Total Reforma</div>
+          <div class="hero-total" style="font-size:24px;font-weight:800;margin-top:2px">${fmt(getTotalReforma())}</div>
         </div>
-        <div style="text-align:center;flex:1;min-width:80px">
-          <div style="font-size:11px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pagado</div>
-          <div style="font-size:20px;font-weight:700;margin-top:2px;color:#b7e4c7">${fmt(dashTotalPagadoAll)}</div>
+        <div style="text-align:center;flex:1;min-width:70px">
+          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pagado</div>
+          <div class="hero-sub" style="font-size:20px;font-weight:700;margin-top:2px;color:#b7e4c7">${fmt(dashTotalPagadoAll)}</div>
         </div>
-        <div style="text-align:center;flex:1;min-width:80px">
-          <div style="font-size:11px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pendiente</div>
-          <div style="font-size:20px;font-weight:700;margin-top:2px;color:#fca5a5">${fmt(dashTotalPendienteAll)}</div>
+        <div style="text-align:center;flex:1;min-width:70px">
+          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pendiente</div>
+          <div class="hero-sub" style="font-size:20px;font-weight:700;margin-top:2px;color:#fca5a5">${fmt(dashTotalPendienteAll)}</div>
         </div>
       </div>
-      <div style="position:relative;height:48px;background:rgba(255,255,255,0.2);border-radius:24px;overflow:hidden">
+      <div class="hero-bar" style="position:relative;height:48px;background:rgba(255,255,255,0.2);border-radius:24px;overflow:hidden">
         <div style="height:100%;width:${dashPctPagado}%;background:linear-gradient(90deg,#52b788,#b7e4c7);border-radius:24px;transition:width 0.8s ease"></div>
-        <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)">
+        <div class="hero-bar-text" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)">
           ${dashPctPagado}% pagado
         </div>
       </div>
@@ -1052,26 +1075,26 @@ function renderDashboard() {
   const offset = circ - (pctWeighted / 100) * circ;
   const color = pctWeighted >= 75 ? '#0d904f' : pctWeighted >= 40 ? '#e8a817' : '#1a73e8';
 
-  const ringSize = 140;
+  const ringSize = 120;
   const svgR = 50;
   const svgCirc = 2 * Math.PI * svgR;
   const svgOffset = svgCirc - (pctWeighted / 100) * svgCirc;
   document.getElementById('dashRing').innerHTML = `
     <div style="position:relative;width:${ringSize}px;height:${ringSize}px;margin:0 auto">
       <svg viewBox="0 0 120 120" style="width:${ringSize}px;height:${ringSize}px;transform:rotate(-90deg)">
-        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="#e8eaed" stroke-width="9"/>
-        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="${color}" stroke-width="9"
+        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="#e8eaed" stroke-width="10"/>
+        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="${color}" stroke-width="10"
           stroke-dasharray="${svgCirc}" stroke-dashoffset="${svgOffset}" stroke-linecap="round"
           style="transition: stroke-dashoffset 1s ease"/>
       </svg>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
-        <div style="font-size:28px;font-weight:800;color:${color}">${pctWeighted}%</div>
+        <div style="font-size:24px;font-weight:800;color:${color}">${pctWeighted}%</div>
       </div>
     </div>
-    <div style="display:flex;gap:14px;font-size:12px;justify-content:center;flex-wrap:wrap;margin-top:8px">
-      <div style="text-align:center"><strong style="color:#0d904f;font-size:18px">${totalTerminadasAll}</strong><br>Listas</div>
-      <div style="text-align:center"><strong style="color:#e8a817;font-size:18px">${totalEnCursoAll}</strong><br>En curso</div>
-      <div style="text-align:center"><strong style="color:#ea4335;font-size:18px">${totalSinEmpAll}</strong><br>Pendientes</div>
+    <div style="display:flex;gap:10px;font-size:11px;justify-content:center;flex-wrap:wrap;margin-top:6px">
+      <div style="text-align:center"><strong style="color:#0d904f;font-size:16px">${totalTerminadasAll}</strong><br>Listas</div>
+      <div style="text-align:center"><strong style="color:#e8a817;font-size:16px">${totalEnCursoAll}</strong><br>En curso</div>
+      <div style="text-align:center"><strong style="color:#ea4335;font-size:16px">${totalSinEmpAll}</strong><br>Pendientes</div>
     </div>
   `;
 
@@ -1095,9 +1118,9 @@ function renderDashboard() {
       if (st === 'En curso') curso++;
     });
     const pct = Math.round(((done + curso * 0.5) / tasks.length) * 100);
-    return `<div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>${ph.name}</span><span><strong>${pct}%</strong></span></div>
-      <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:4px;transition:width 0.5s"></div></div>
+    return `<div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>${ph.name}</span><span><strong>${pct}%</strong></span></div>
+      <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:3px;transition:width 0.5s"></div></div>
     </div>`;
   }).join('');
 
@@ -1112,24 +1135,23 @@ function renderDashboard() {
   const dashMisGastado = getMisComprasGastado();
   const dashMisPct = dashMisCompras > 0 ? Math.min(100, Math.round(dashMisGastado / dashMisCompras * 100)) : 0;
   document.getElementById('dashFinancial').innerHTML = `
-    <div style="font-size:13px;">
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Efectivo J.A.</span><span><strong>${fmt(dashJAPagado)}</strong> / ${fmt(dashJAPagar)}</span></div>
-        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
+    <div style="font-size:12px;">
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Efectivo J.A.</span><span>${fmt(dashJAPagado)} / ${fmt(dashJAPagar)}</span></div>
+        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
       </div>
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Mat. J.A.</span><span><strong>${fmt(dashMatJAGastado)}</strong> / ${fmt(dashMatJA)}</span></div>
-        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashMatJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Mat. J.A.</span><span>${fmt(dashMatJAGastado)} / ${fmt(dashMatJA)}</span></div>
+        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashMatJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
       </div>
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Mis compras</span><span><strong>${fmt(dashMisGastado)}</strong> / ${fmt(dashMisCompras)}</span></div>
-        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashMisPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Mis compras</span><span>${fmt(dashMisGastado)} / ${fmt(dashMisCompras)}</span></div>
+        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashMisPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
       </div>
-      <div style="border-top:2px solid var(--border);padding-top:8px;font-size:12px">
-        <div style="font-weight:700;margin-bottom:6px;color:var(--text-secondary)">Pendiente por categoria:</div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Efectivo J.A.</span><strong style="color:var(--danger)">${fmt(dashJAPagar - dashJAPagado)}</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Mat. J.A.</span><strong style="color:var(--danger)">${fmt(dashMatJA - dashMatJAGastado)}</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Mis compras</span><strong style="color:var(--danger)">${fmt(dashMisCompras - dashMisGastado)}</strong></div>
+      <div style="border-top:1px solid var(--border);padding-top:6px;font-size:11px">
+        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Efectivo</span><strong style="color:var(--danger)">${fmt(dashJAPagar - dashJAPagado)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Mat. J.A.</span><strong style="color:var(--danger)">${fmt(dashMatJA - dashMatJAGastado)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Mis compras</span><strong style="color:var(--danger)">${fmt(dashMisCompras - dashMisGastado)}</strong></div>
       </div>
     </div>
   `;
@@ -1144,10 +1166,10 @@ function renderDashboard() {
     const lastDay = new Date(year, month + 1, 0);
     let startDow = firstDay.getDay(); // 0=Sun
     startDow = startDow === 0 ? 6 : startDow - 1; // Convert to Mon=0
-    let html = `<div style="margin-bottom:10px">
-      <div style="font-weight:700;font-size:13px;text-align:center;margin-bottom:4px;color:var(--primary)">${monthNames[month]} ${year}</div>
+    let html = `<div style="margin-bottom:8px">
+      <div style="font-weight:700;font-size:12px;text-align:center;margin-bottom:3px;color:var(--primary)">${monthNames[month]} ${year}</div>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center">`;
-    dayNames.forEach(d => { html += `<div style="font-size:10px;font-weight:600;color:var(--text-secondary);padding:2px 0">${d}</div>`; });
+    dayNames.forEach(d => { html += `<div style="font-size:9px;font-weight:600;color:var(--text-secondary);padding:1px 0">${d}</div>`; });
     for (let i = 0; i < startDow; i++) html += '<div></div>';
     for (let d = 1; d <= lastDay.getDate(); d++) {
       const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -1159,7 +1181,7 @@ function renderDashboard() {
       else if (isToday) { bg = '#1b4332'; clr = '#fff'; fw = '700'; }
       else if (isPaidPay) { bg = '#d8f3dc'; clr = '#0d904f'; fw = '700'; }
       else if (isPay) { bg = '#fef7e0'; clr = '#b06000'; fw = '700'; }
-      html += `<div style="font-size:12px;padding:3px 0;border-radius:50%;background:${bg};color:${clr};font-weight:${fw};border:${brd};line-height:1.6;min-width:24px">${d}</div>`;
+      html += `<div style="font-size:11px;padding:2px 0;border-radius:50%;background:${bg};color:${clr};font-weight:${fw};border:${brd};line-height:1.5;min-width:22px">${d}</div>`;
     }
     html += '</div></div>';
     return html;
@@ -1194,30 +1216,30 @@ function renderDashboard() {
   const finEsperado = semanasRetraso > 0 ? new Date(fin.getTime() + semanasRetraso * 7 * 24*60*60*1000) : fin;
 
   document.getElementById('dashTimeline').innerHTML = `
-    <div style="font-size:12px">
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+    <div style="font-size:11px">
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
         <span>Inicio</span><strong>${fmtDateLong(inicio)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
         <span>Fin planificado</span><strong>${fmtDateLong(fin)}</strong>
       </div>
-      ${semanasRetraso > 0 ? `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--danger)">
+      ${semanasRetraso > 0 ? `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--danger)">
         <span>Fin esperado</span><strong>${fmtDateLong(finEsperado)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--danger)">
-        <span>Retraso estimado</span><strong>${semanasRetraso} sem.</strong>
-      </div>` : `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--success)">
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--danger)">
+        <span>Retraso</span><strong>${semanasRetraso} sem.</strong>
+      </div>` : `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--success)">
         <span>Retraso</span><strong>Sin retraso</strong>
       </div>`}
-      <div style="margin-top:8px;margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>Tiempo</span><span>${diasTranscurridos}d / ${diasTotal}d (${pctTime}%)</span></div>
-        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:4px"></div></div>
+      <div style="margin-top:6px;margin-bottom:4px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Tiempo</span><span>${diasTranscurridos}d / ${diasTotal}d (${pctTime}%)</span></div>
+        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:3px"></div></div>
       </div>
-      <div style="margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>Obra</span><span>${pctObra}%</span></div>
-        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:#52b788;border-radius:4px"></div></div>
+      <div style="margin-bottom:4px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Obra</span><span>${pctObra}%</span></div>
+        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:#52b788;border-radius:3px"></div></div>
       </div>
-      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:14px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">${diasRestantes} dias restantes</div>
+      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:13px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">Quedan ${diasRestantes} dias</div>
     </div>
   `;
 
@@ -1228,8 +1250,8 @@ function renderDashboard() {
     cat: 'Organizacion', concepto: t.name, coste: 0, estado: getTaskEstado(t), pagado: '-', isGanttOnly: true
   }));
   const combined = [...ganttOnlyTasks, ...allTasks];
-  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:13px"><thead><tr><th style="padding:6px 8px">#</th><th style="padding:6px 8px">Cat.</th><th style="padding:6px 8px">Concepto</th><th style="padding:6px 8px">Coste</th><th style="padding:6px 8px">Estado</th></tr></thead><tbody>
-    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:5px 8px">${i+1}</td><td style="padding:5px 8px">${t.cat}</td><td style="padding:5px 8px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.concepto}</td><td style="padding:5px 8px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:5px 8px">${estadoBadge(t.estado)}</td></tr>`).join('')}
+  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11px"><thead><tr><th style="padding:4px 6px">#</th><th style="padding:4px 6px">Cat.</th><th style="padding:4px 6px">Concepto</th><th style="padding:4px 6px">Coste</th><th style="padding:4px 6px">Estado</th></tr></thead><tbody>
+    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:3px 6px">${i+1}</td><td style="padding:3px 6px;font-size:10px">${t.cat}</td><td style="padding:3px 6px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">${t.concepto}</td><td style="padding:3px 6px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:3px 6px">${estadoBadge(t.estado)}</td></tr>`).join('')}
   </tbody></table></div>`;
 }
 
