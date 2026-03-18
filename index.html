@@ -649,28 +649,36 @@ select.estado-select:focus, select.pago-select:focus {
   <!-- DASHBOARD -->
   <div class="tab-content active" id="tab-dashboard">
     <div class="stats-grid" id="dashStats"></div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px;">
-      <div class="card">
-        <div class="card-title">Progreso General de la Reforma</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Progreso General</div>
         <div class="progress-ring-container" id="dashRing"></div>
       </div>
-      <div class="card">
-        <div class="card-title">Progreso por Categoria</div>
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Fases del Gantt</div>
         <div id="dashPhaseProgress"></div>
       </div>
-    </div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:16px;">
-      <div class="card">
-        <div class="card-title">Resumen Financiero</div>
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Resumen Financiero</div>
         <div id="dashFinancial"></div>
       </div>
-      <div class="card">
-        <div class="card-title">Proximos Pagos</div>
-        <div id="dashNextPayments"></div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Calendario de Pagos</div>
+        <div id="dashAllPayments"></div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Fechas Clave</div>
+        <div id="dashTimeline"></div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="card-title" style="font-size:13px;margin-bottom:8px">Materiales</div>
+        <div id="dashMateriales"></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">Tareas en Curso / Recientes</div>
+    <div class="card" style="padding:12px">
+      <div class="card-title" style="font-size:13px;margin-bottom:8px">Todas las Tareas</div>
       <div id="dashActiveTasks"></div>
     </div>
   </div>
@@ -958,105 +966,181 @@ function renderDashboard() {
   const terminadas = getTerminadas();
   const enCurso = getEnCurso();
   const sinEmp = getSinEmpezar();
-  const pct = total > 0 ? Math.round((terminadas / total) * 100) : 0;
-  // Weighted progress: terminado=100%, en curso=50%
+
+  // Weighted progress including gantt-only tasks (Fase 0, etc.)
   const costeTotal = data.presupuesto.reduce((s,p) => s + p.coste, 0);
   const costeTerminado = data.presupuesto.filter(p=>p.estado==='Terminado').reduce((s,p) => s + p.coste, 0);
   const costeCurso = data.presupuesto.filter(p=>p.estado==='En curso').reduce((s,p) => s + p.coste, 0);
-  const pctWeighted = costeTotal > 0 ? Math.round(((costeTerminado + costeCurso * 0.5) / costeTotal) * 100) : 0;
+  // Count gantt-only tasks (presupId===null) - they have no cost, so use task count approach
+  const ganttOnly = data.ganttTasks.filter(t => t.presupId === null);
+  const totalTasks = total + ganttOnly.length;
+  // For gantt-only tasks: treat as "En curso" if no presupuesto link
+  const ganttOnlyCurso = ganttOnly.length; // Fase 0 tasks are "En curso" by default
+  // Blended progress: weight presupuesto by cost, gantt-only tasks each count as avg cost
+  const avgCost = costeTotal > 0 ? costeTotal / total : 1;
+  const virtualTotal = costeTotal + ganttOnly.length * avgCost;
+  const virtualTerminado = costeTerminado;
+  const virtualCurso = costeCurso + ganttOnlyCurso * avgCost;
+  const pctWeighted = virtualTotal > 0 ? Math.round(((virtualTerminado + virtualCurso * 0.5) / virtualTotal) * 100) : 0;
+
+  const totalEnCursoAll = enCurso + ganttOnlyCurso;
+  const totalTerminadasAll = terminadas;
+  const totalSinEmpAll = sinEmp;
 
   document.getElementById('dashStats').innerHTML = `
-    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(getTotalReforma())}</div><div class="stat-label">Total Reforma</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(getTotalPagado())}</div><div class="stat-label">Pagado a J.A.</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente J.A.</div></div>
-    <div class="stat-card"><div class="stat-value">${terminadas}/${total}</div><div class="stat-label">Tareas completadas</div></div>
+    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--primary)">${fmt(getTotalReforma())}</div><div class="stat-label">Total Reforma</div></div>
+    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--success)">${fmt(getTotalPagado())}</div><div class="stat-label">Pagado</div></div>
+    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px;color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente</div></div>
+    <div class="stat-card" style="padding:10px"><div class="stat-value" style="font-size:20px">${pctWeighted}%</div><div class="stat-label">Progreso</div></div>
   `;
 
-  // Progress ring
-  const r = 85;
+  // Progress ring (smaller)
+  const r = 60;
   const circ = 2 * Math.PI * r;
   const offset = circ - (pctWeighted / 100) * circ;
   const color = pctWeighted >= 75 ? '#0d904f' : pctWeighted >= 40 ? '#e8a817' : '#1a73e8';
 
   document.getElementById('dashRing').innerHTML = `
-    <div class="progress-ring">
-      <svg viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="${r}" fill="none" stroke="#e8eaed" stroke-width="12"/>
-        <circle cx="100" cy="100" r="${r}" fill="none" stroke="${color}" stroke-width="12"
+    <div class="progress-ring" style="width:150px;height:150px;margin:0 auto">
+      <svg viewBox="0 0 150 150">
+        <circle cx="75" cy="75" r="${r}" fill="none" stroke="#e8eaed" stroke-width="10"/>
+        <circle cx="75" cy="75" r="${r}" fill="none" stroke="${color}" stroke-width="10"
           stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"
           style="transition: stroke-dashoffset 1s ease"/>
       </svg>
       <div class="progress-ring-text">
-        <div class="progress-ring-pct" style="color:${color}">${pctWeighted}%</div>
-        <div class="progress-ring-label">completado</div>
+        <div class="progress-ring-pct" style="color:${color};font-size:24px">${pctWeighted}%</div>
       </div>
     </div>
-    <div style="display:flex;gap:20px;font-size:13px;justify-content:center;flex-wrap:wrap">
-      <div style="text-align:center"><strong style="color:#0d904f;font-size:22px">${terminadas}</strong><br>Terminadas</div>
-      <div style="text-align:center"><strong style="color:#e8a817;font-size:22px">${enCurso}</strong><br>En curso</div>
-      <div style="text-align:center"><strong style="color:#ea4335;font-size:22px">${sinEmp}</strong><br>Sin empezar</div>
+    <div style="display:flex;gap:12px;font-size:11px;justify-content:center;flex-wrap:wrap;margin-top:6px">
+      <div style="text-align:center"><strong style="color:#0d904f;font-size:16px">${totalTerminadasAll}</strong><br>Listas</div>
+      <div style="text-align:center"><strong style="color:#e8a817;font-size:16px">${totalEnCursoAll}</strong><br>En curso</div>
+      <div style="text-align:center"><strong style="color:#ea4335;font-size:16px">${totalSinEmpAll}</strong><br>Pendientes</div>
     </div>
   `;
 
-  // Phase progress
-  const cats = {};
-  data.presupuesto.forEach(p => {
-    const c = p.cat;
-    if (!cats[c]) cats[c] = {total:0, terminado:0, enCurso:0};
-    cats[c].total++;
-    if (p.estado === 'Terminado') cats[c].terminado++;
-    if (p.estado === 'En curso') cats[c].enCurso++;
-  });
-  const colors = ['progress-fill-blue','progress-fill-green','progress-fill-orange','progress-fill-red','progress-fill-purple','progress-fill-cyan'];
-  let ci = 0;
-  document.getElementById('dashPhaseProgress').innerHTML = Object.entries(cats).map(([name, v]) => {
-    const pct = Math.round(((v.terminado + v.enCurso * 0.5) / v.total) * 100);
-    const cls = colors[ci++ % colors.length];
-    return `<div class="phase-item">
-      <div class="phase-name"><span>${name}</span><span>${pct}% (${v.terminado}/${v.total})</span></div>
-      <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div>
+  // Phase progress (by Gantt phases)
+  const phases = [
+    {name:"Fase 0: Organizacion", phase:0},
+    {name:"Fase 1: Demolicion", phase:1},
+    {name:"Fase 2: Albanileria", phase:2},
+    {name:"Fase 3: Instalaciones", phase:3},
+    {name:"Fase 4: Acabados", phase:4},
+    {name:"Fase 5: Remates", phase:5}
+  ];
+  const phaseColors = ['#52b788','#2d6a4f','#40916c','#1a73e8','#e8a817','#d93025'];
+  document.getElementById('dashPhaseProgress').innerHTML = phases.map((ph, idx) => {
+    const tasks = data.ganttTasks.filter(t => t.phase === ph.phase);
+    if (tasks.length === 0) return '';
+    let done = 0, curso = 0;
+    tasks.forEach(t => {
+      const pi = data.presupuesto.find(p => p.id === t.presupId);
+      const st = pi ? pi.estado : (t.presupId === null ? 'En curso' : 'Sin empezar');
+      if (st === 'Terminado') done++;
+      if (st === 'En curso') curso++;
+    });
+    const pct = Math.round(((done + curso * 0.5) / tasks.length) * 100);
+    return `<div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>${ph.name}</span><span>${pct}%</span></div>
+      <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:3px;transition:width 0.5s"></div></div>
     </div>`;
   }).join('');
 
-  // Financial
+  // Financial (compact)
   document.getElementById('dashFinancial').innerHTML = `
-    <div style="font-size:13px;">
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span>Presupuesto Jose Antonio</span><strong>${fmt(getJATotal())}</strong>
+    <div style="font-size:11px;">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Presupuesto J.A.</span><strong>${fmt(getJATotal())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span>Materiales incluidos</span><strong>-${fmt(data.jaMaterialesIncluidos)}</strong>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Mat. incluidos</span><strong>-${fmt(data.jaMaterialesIncluidos)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
-        <span>A pagar a J.A.</span><strong>${fmt(getJAPagar())}</strong>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
+        <span>A pagar J.A.</span><strong>${fmt(getJAPagar())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
         <span>Mis compras</span><strong>${fmt(getMisCompras())}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:700;font-size:15px;color:var(--danger)">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Ya pagado</span><strong style="color:var(--success)">${fmt(getTotalPagado())}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:700;font-size:13px;color:var(--danger)">
         <span>TOTAL REFORMA</span><strong>${fmt(getTotalReforma())}</strong>
       </div>
     </div>
   `;
 
-  // Next payments
-  const pending = data.pagos.filter(p => !p.pagado);
-  document.getElementById('dashNextPayments').innerHTML = pending.length === 0
-    ? '<p style="font-size:13px;color:var(--success);font-weight:600">Todos los pagos realizados</p>'
-    : pending.slice(0, 3).map(p => `
-      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
-        <span>Pago ${p.id}${p.isLast?' (ultimo)':''} - ${fmtDate(p.fecha)}</span>
-        <strong>${fmt(p.importe)}</strong>
-      </div>
-    `).join('');
+  // All payments calendar
+  document.getElementById('dashAllPayments').innerHTML = data.pagos.map(p => {
+    const isPaid = p.pagado;
+    const bg = isPaid ? '#d8f3dc' : 'transparent';
+    const icon = isPaid ? '&#10003;' : '&#9675;';
+    const iconColor = isPaid ? '#0d904f' : '#aaa';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;background:${bg};padding:3px 4px;border-radius:4px;margin-bottom:2px">
+      <span><span style="color:${iconColor};font-size:13px;margin-right:4px">${icon}</span>Pago ${p.id}${p.isLast?' (ult.)':''} · ${fmtDate(p.fecha)}</span>
+      <strong>${fmt(p.importe)}</strong>
+    </div>`;
+  }).join('');
 
-  // Active tasks
-  const active = [...data.presupuesto.filter(p => p.estado === 'En curso'), ...data.presupuesto.filter(p => p.estado === 'Terminado')].slice(0, 8);
-  document.getElementById('dashActiveTasks').innerHTML = active.length === 0
-    ? '<p style="font-size:13px;color:var(--text-secondary)">Ninguna tarea en curso todavia</p>'
-    : `<div class="table-wrapper"><table><thead><tr><th>Categoria</th><th>Concepto</th><th>Coste</th><th>Estado</th><th>Pagado</th></tr></thead><tbody>
-      ${active.map(t => `<tr class="${catClass(t.cat)}"><td>${t.cat}</td><td style="max-width:250px;font-size:12px">${t.concepto}</td><td>${fmt(t.coste)}</td><td>${estadoBadge(t.estado)}</td><td>${pagadoBadge(t.pagado)}</td></tr>`).join('')}
-    </tbody></table></div>`;
+  // Timeline / key dates
+  const inicio = getFechaInicio();
+  const fin = getFechaFin();
+  const now = new Date();
+  const diasTotal = Math.ceil((fin - inicio) / (1000*60*60*24));
+  const diasTranscurridos = Math.max(0, Math.ceil((now - inicio) / (1000*60*60*24)));
+  const diasRestantes = Math.max(0, Math.ceil((fin - now) / (1000*60*60*24)));
+  const pctTime = diasTotal > 0 ? Math.min(100, Math.round((diasTranscurridos / diasTotal) * 100)) : 0;
+  document.getElementById('dashTimeline').innerHTML = `
+    <div style="font-size:11px">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Inicio reforma</span><strong>${fmtDateLong(inicio)}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Fin previsto</span><strong>${fmtDateLong(fin)}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Duracion total</span><strong>${diasTotal} dias (${getNumSemanas()} sem.)</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Dias restantes</span><strong style="color:${diasRestantes<=14?'var(--danger)':'var(--text)'}}">${diasRestantes} dias</strong>
+      </div>
+      <div style="margin-top:6px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Tiempo transcurrido</span><span>${pctTime}%</span></div>
+        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:3px"></div></div>
+      </div>
+    </div>
+  `;
+
+  // Materiales summary
+  const matGastado = getMatGastado();
+  const matCount = data.materiales.length;
+  document.getElementById('dashMateriales').innerHTML = `
+    <div style="font-size:11px">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Articulos comprados</span><strong>${matCount}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Total gastado</span><strong>${fmt(matGastado)}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Presup. materiales</span><strong>${fmt(getMisCompras())}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0">
+        <span>Restante</span><strong style="color:${getMisCompras()-matGastado>=0?'var(--success)':'var(--danger)'}">${fmt(getMisCompras() - matGastado)}</strong>
+      </div>
+    </div>
+  `;
+
+  // All tasks (compact table)
+  const allTasks = data.presupuesto;
+  // Also add gantt-only tasks
+  const ganttOnlyTasks = data.ganttTasks.filter(t => t.presupId === null).map(t => ({
+    cat: 'Organizacion', concepto: t.name, coste: 0, estado: 'En curso', pagado: '-', isGanttOnly: true
+  }));
+  const combined = [...ganttOnlyTasks, ...allTasks];
+  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11px"><thead><tr><th style="padding:4px 6px">#</th><th style="padding:4px 6px">Cat.</th><th style="padding:4px 6px">Concepto</th><th style="padding:4px 6px">Coste</th><th style="padding:4px 6px">Estado</th></tr></thead><tbody>
+    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:3px 6px;font-size:10px">${i+1}</td><td style="padding:3px 6px;font-size:10px">${t.cat}</td><td style="padding:3px 6px;font-size:10px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.concepto}</td><td style="padding:3px 6px;font-size:10px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:3px 6px">${estadoBadge(t.estado)}</td></tr>`).join('')}
+  </tbody></table></div>`;
 }
 
 // ============================================================
