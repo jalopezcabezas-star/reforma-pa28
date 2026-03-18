@@ -642,7 +642,6 @@ select.estado-select:focus, select.pago-select:focus {
     <div class="nav-tab" data-tab="presupuesto">Presupuesto</div>
     <div class="nav-tab" data-tab="gantt">Gantt</div>
     <div class="nav-tab" data-tab="pagos">Pagos</div>
-    <div class="nav-tab" data-tab="materiales">Materiales</div>
   </div>
 </div>
 
@@ -754,48 +753,35 @@ select.estado-select:focus, select.pago-select:focus {
   <!-- PAGOS -->
   <div class="tab-content" id="tab-pagos">
     <div class="stats-grid" id="pagosStats"></div>
+
+    <!-- Category 1: Efectivo a Jose Antonio -->
     <div class="card">
-      <div class="card-title">Pagos a Jose Antonio (Cash)</div>
+      <div class="card-title">Efectivo a Jose Antonio</div>
       <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Haz clic en el circulo para marcar un pago como realizado</p>
       <div id="pagosList"></div>
     </div>
+
+    <!-- Category 2: Materiales incluidos presupuesto J.A. -->
+    <div class="card">
+      <div class="card-title">Materiales incluidos presupuesto J.A.</div>
+      <div id="matJASection"></div>
+    </div>
+
+    <!-- Category 3: Mobiliario, Electrodomesticos y Mis Compras -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">Mobiliario, Electrodomesticos y Mis Compras</div>
+        <button class="btn btn-primary btn-sm" onclick="addMisCompra()">+ Anadir compra</button>
+      </div>
+      <div id="misComprasSection"></div>
+    </div>
+
     <div class="card">
       <div class="card-title">Calendario de Pagos 2026</div>
       <div class="calendar-grid" id="calendarGrid"></div>
     </div>
   </div>
 
-  <!-- MATERIALES -->
-  <div class="tab-content" id="tab-materiales">
-    <div class="stats-grid" id="matStats"></div>
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="card-title" style="margin-bottom:0">Control de Compras de Materiales</div>
-        <button class="btn btn-primary btn-sm" onclick="addMaterial()">+ Anadir compra</button>
-      </div>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Fecha</th>
-              <th>Tienda</th>
-              <th>Concepto</th>
-              <th>Importe</th>
-              <th>Acumulado</th>
-              <th>Restante</th>
-              <th>Metodo</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="matBody"></tbody>
-        </table>
-      </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);">
-        Tiendas habituales: Obramat, Bricodepot, IKEA, Leroy Merlin, Electrodepot
-      </div>
-    </div>
-  </div>
 
 </div>
 
@@ -848,6 +834,7 @@ const DEFAULT_DATA = {
     {id:7,fecha:"2026-06-30",importe:0,pagado:false,isLast:true}
   ],
   materiales: [],
+  materialesJA: [],
   ganttTasks: [
     {id:18,name:"Organizacion de la reforma y planos",presupId:null,weeks:[-1,0,1],color:"color-org",phase:0},
     {id:1,name:"1-Electricidad (rozas, cableado)",presupId:1,weeks:[1,2,3],color:"color-elec",phase:1},
@@ -881,6 +868,7 @@ function loadData() {
       if (!data.ganttTasks) data.ganttTasks = DEFAULT_DATA.ganttTasks;
       if (!data.materialesPresupuesto) data.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
       if (!data.jaMaterialesIncluidos) data.jaMaterialesIncluidos = DEFAULT_DATA.jaMaterialesIncluidos;
+      if (!data.materialesJA) data.materialesJA = [];
       if (!data.nextId) data.nextId = 30;
     } else {
       data = JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -914,6 +902,9 @@ function getSinEmpezar() { return data.presupuesto.filter(p => p.estado === "Sin
 function getTotalPagado() { return data.pagos.filter(p => p.pagado).reduce((s,p) => s + p.importe, 0); }
 function getTotalPendiente() { return getJAPagar() - getTotalPagado(); }
 function getMatGastado() { return data.materiales.reduce((s,m) => s + (m.importe || 0), 0); }
+function getMatJAGastado() { return data.materialesJA.reduce((s,m) => s + (m.importe || 0), 0); }
+function getMisComprasGastado() { return getMatGastado(); }
+function getTotalPagadoAll() { return getTotalPagado() + getMatJAGastado() + getMisComprasGastado(); }
 
 // Current week number relative to the Gantt timeline (can be negative for pre-weeks)
 function getCurrentWeekNum() {
@@ -1093,25 +1084,31 @@ function renderDashboard() {
     </div>`;
   }).join('');
 
-  // Financial (compact)
+  // Financial (3 progress bars)
+  const dashJAPagar = getJAPagar();
+  const dashJAPagado = getTotalPagado();
+  const dashJAPct = dashJAPagar > 0 ? Math.min(100, Math.round(dashJAPagado / dashJAPagar * 100)) : 0;
+  const dashMatJA = data.jaMaterialesIncluidos;
+  const dashMatJAGastado = getMatJAGastado();
+  const dashMatJAPct = dashMatJA > 0 ? Math.min(100, Math.round(dashMatJAGastado / dashMatJA * 100)) : 0;
+  const dashMisCompras = getMisCompras();
+  const dashMisGastado = getMisComprasGastado();
+  const dashMisPct = dashMisCompras > 0 ? Math.min(100, Math.round(dashMisGastado / dashMisCompras * 100)) : 0;
   document.getElementById('dashFinancial').innerHTML = `
     <div style="font-size:13px;">
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Presupuesto J.A.</span><strong>${fmt(getJATotal())}</strong>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Efectivo J.A.</span><span><strong>${fmt(dashJAPagado)}</strong> / ${fmt(dashJAPagar)}</span></div>
+        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Mat. incluidos</span><strong>-${fmt(data.jaMaterialesIncluidos)}</strong>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Mat. J.A.</span><span><strong>${fmt(dashMatJAGastado)}</strong> / ${fmt(dashMatJA)}</span></div>
+        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashMatJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
-        <span>A pagar J.A.</span><strong>${fmt(getJAPagar())}</strong>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Mis compras</span><span><strong>${fmt(dashMisGastado)}</strong> / ${fmt(dashMisCompras)}</span></div>
+        <div style="height:10px;background:#e8eaed;border-radius:5px;overflow:hidden"><div style="height:100%;width:${dashMisPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:5px;transition:width 0.5s"></div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Mis compras</span><strong>${fmt(getMisCompras())}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Ya pagado</span><strong style="color:var(--success)">${fmt(getTotalPagado())}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700;font-size:15px;color:var(--danger)">
+      <div style="border-top:2px solid var(--border);padding-top:8px;display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:var(--primary)">
         <span>TOTAL REFORMA</span><strong>${fmt(getTotalReforma())}</strong>
       </div>
     </div>
@@ -1450,23 +1447,27 @@ function toggleGanttWeek(taskId, weekNum) {
 // ============================================================
 function renderPagos() {
   updateLastPayment();
+  const totalReforma = getTotalReforma();
+  const totalPagadoAll = getTotalPagadoAll();
+  const totalPendienteAll = totalReforma - totalPagadoAll;
+  const pctAll = totalReforma > 0 ? Math.round(totalPagadoAll / totalReforma * 100) : 0;
+
+  document.getElementById('pagosStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(totalReforma)}</div><div class="stat-label">Total Reforma</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(totalPagadoAll)}</div><div class="stat-label">Total Pagado</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(totalPendienteAll)}</div><div class="stat-label">Total Pendiente</div></div>
+    <div class="stat-card"><div class="stat-value">${pctAll}%</div><div class="stat-label">% Pagado</div></div>
+  `;
+
+  // Category 1: Efectivo a Jose Antonio
   const totalAPagar = getJAPagar();
   const totalPagado = getTotalPagado();
   const pctPagado = totalAPagar > 0 ? Math.round(totalPagado / totalAPagar * 100) : 0;
 
-  document.getElementById('pagosStats').innerHTML = `
-    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(totalAPagar)}</div><div class="stat-label">Total a pagar J.A.</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(totalPagado)}</div><div class="stat-label">Pagado</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente</div></div>
-    <div class="stat-card"><div class="stat-value">${pctPagado}%</div><div class="stat-label">% Pagado</div></div>
-  `;
-
   document.getElementById('pagosList').innerHTML = `
     <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Pagado</span><span><strong>${fmt(totalPagado)}</strong> / ${fmt(totalAPagar)}</span></div>
       <div class="progress-bar" style="height:14px;border-radius:7px"><div class="progress-fill progress-fill-green" style="width:${pctPagado}%;border-radius:7px"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px">
-        <span>${fmt(totalPagado)} pagado</span><span>${fmt(getTotalPendiente())} pendiente</span>
-      </div>
     </div>
     ${data.pagos.map(p => `
       <div class="payment-item ${p.pagado ? 'paid' : ''}" onclick="togglePago(${p.id})">
@@ -1478,6 +1479,72 @@ function renderPagos() {
         <div class="check-circle ${p.pagado ? 'checked' : ''}"></div>
       </div>
     `).join('')}
+  `;
+
+  // Category 2: Materiales incluidos presupuesto J.A.
+  const matJATotal = data.jaMaterialesIncluidos;
+  const matJAGastado = getMatJAGastado();
+  const matJARestante = matJATotal - matJAGastado;
+  const matJAPct = matJATotal > 0 ? Math.min(100, Math.round(matJAGastado / matJATotal * 100)) : 0;
+
+  let matJAAcumulado = 0;
+  document.getElementById('matJASection').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Gastado</span><span><strong>${fmt(matJAGastado)}</strong> / ${fmt(matJATotal)}</span></div>
+      <div class="progress-bar" style="height:14px;border-radius:7px"><div class="progress-fill progress-fill-green" style="width:${matJAPct}%;border-radius:7px"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px">
+        <span>${fmt(matJAGastado)} gastado</span><span style="color:${matJARestante>=0?'var(--success)':'var(--danger)'}">${fmt(matJARestante)} restante</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <button class="btn btn-primary btn-sm" onclick="addMaterialJA()">+ Anadir compra</button>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Metodo</th><th></th></tr></thead>
+        <tbody>${data.materialesJA.length === 0
+          ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas.</td></tr>'
+          : data.materialesJA.map((m, i) => {
+            matJAAcumulado += m.importe || 0;
+            const rest = matJATotal - matJAAcumulado;
+            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(matJAAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td><button class="delete-row" onclick="deleteMaterialJA('+i+')">&times;</button></td></tr>';
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  // Category 3: Mobiliario, Electrodomesticos y Mis Compras
+  const misComprasTotal = getMisCompras();
+  const misComprasGastado = getMisComprasGastado();
+  const misComprasRestante = misComprasTotal - misComprasGastado;
+  const misComprasPct = misComprasTotal > 0 ? Math.min(100, Math.round(misComprasGastado / misComprasTotal * 100)) : 0;
+
+  let misAcumulado = 0;
+  document.getElementById('misComprasSection').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Gastado</span><span><strong>${fmt(misComprasGastado)}</strong> / ${fmt(misComprasTotal)}</span></div>
+      <div class="progress-bar" style="height:14px;border-radius:7px"><div class="progress-fill progress-fill-green" style="width:${misComprasPct}%;border-radius:7px"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px">
+        <span>${fmt(misComprasGastado)} gastado</span><span style="color:${misComprasRestante>=0?'var(--success)':'var(--danger)'}">${fmt(misComprasRestante)} restante</span>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Metodo</th><th></th></tr></thead>
+        <tbody>${data.materiales.length === 0
+          ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas.</td></tr>'
+          : data.materiales.map((m, i) => {
+            misAcumulado += m.importe || 0;
+            const rest = misComprasTotal - misAcumulado;
+            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(misAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td><button class="delete-row" onclick="deleteMaterial('+i+')">&times;</button></td></tr>';
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);">
+      Tiendas habituales: Obramat, Bricodepot, IKEA, Leroy Merlin, Electrodepot
+    </div>
   `;
 
   renderCalendar();
@@ -1534,41 +1601,11 @@ function renderCalendar() {
 }
 
 // ============================================================
-// MATERIALES
+// MATERIALES (now inside Pagos tab)
 // ============================================================
-function renderMateriales() {
-  const gastado = getMatGastado();
-  const restante = data.materialesPresupuesto - gastado;
-  const pct = data.materialesPresupuesto > 0 ? Math.round(gastado / data.materialesPresupuesto * 100) : 0;
-
-  document.getElementById('matStats').innerHTML = `
-    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(data.materialesPresupuesto)}</div><div class="stat-label">Presup. Materiales</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:var(--warning)">${fmt(gastado)}</div><div class="stat-label">Gastado</div></div>
-    <div class="stat-card"><div class="stat-value" style="color:${restante>=0?'var(--success)':'var(--danger)'}">${fmt(restante)}</div><div class="stat-label">Restante</div></div>
-    <div class="stat-card"><div class="stat-value">${pct}%</div><div class="stat-label">% Usado</div></div>
-  `;
-
-  let acumulado = 0;
-  document.getElementById('matBody').innerHTML = data.materiales.length === 0
-    ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas. Pulsa "+ Anadir compra" para empezar.</td></tr>'
-    : data.materiales.map((m, i) => {
-      acumulado += m.importe || 0;
-      const rest = data.materialesPresupuesto - acumulado;
-      return `<tr>
-        <td>${i+1}</td><td>${fmtDate(m.fecha)}</td><td>${m.tienda||'-'}</td>
-        <td style="max-width:200px;font-size:12px">${m.concepto||'-'}</td>
-        <td><strong>${m.importe?fmt(m.importe):'-'}</strong></td>
-        <td>${fmt(acumulado)}</td>
-        <td style="color:${rest>=0?'var(--success)':'var(--danger)'}">${fmt(rest)}</td>
-        <td style="font-size:11px">${m.metodo||'-'}</td>
-        <td><button class="delete-row" onclick="deleteMaterial(${i})">&times;</button></td>
-      </tr>`;
-    }).join('');
-}
-
-function addMaterial() {
+function addMaterialJA() {
   document.getElementById('modalContent').innerHTML = `
-    <h3>Anadir Compra de Material</h3>
+    <h3>Anadir Compra Material J.A.</h3>
     <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha"></div>
     <div class="modal-field"><label>Tienda</label>
       <select id="matTienda"><option value="">Seleccionar...</option>
@@ -1583,13 +1620,56 @@ function addMaterial() {
     </div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveMaterial()">Guardar</button>
+      <button class="btn btn-primary" onclick="saveMaterialJA()">Guardar</button>
     </div>
   `;
   document.getElementById('modalOverlay').classList.add('show');
 }
 
-function saveMaterial() {
+function saveMaterialJA() {
+  data.materialesJA.push({
+    fecha: document.getElementById('matFecha').value,
+    tienda: document.getElementById('matTienda').value,
+    concepto: document.getElementById('matConcepto').value,
+    importe: parseFloat(document.getElementById('matImporte').value) || 0,
+    metodo: document.getElementById('matMetodo').value
+  });
+  saveData(); closeModal(); renderAll();
+  showToast('Compra material J.A. registrada');
+}
+
+function deleteMaterialJA(idx) {
+  if (confirm('Eliminar esta compra?')) {
+    data.materialesJA.splice(idx, 1);
+    saveData(); renderAll();
+    showToast('Compra eliminada');
+  }
+}
+
+function addMisCompra() {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Anadir Compra</h3>
+    <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha"></div>
+    <div class="modal-field"><label>Tienda</label>
+      <select id="matTienda"><option value="">Seleccionar...</option>
+        <option>Obramat</option><option>Bricodepot</option><option>IKEA</option>
+        <option>Leroy Merlin</option><option>Electrodepot</option><option>Otra</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripcion de la compra"></div>
+    <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" placeholder="0.00"></div>
+    <div class="modal-field"><label>Metodo de pago</label>
+      <select id="matMetodo"><option>Transferencia</option><option>Tarjeta</option><option>Bizum</option><option>Efectivo</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMisCompra()">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveMisCompra() {
   data.materiales.push({
     fecha: document.getElementById('matFecha').value,
     tienda: document.getElementById('matTienda').value,
@@ -1597,13 +1677,14 @@ function saveMaterial() {
     importe: parseFloat(document.getElementById('matImporte').value) || 0,
     metodo: document.getElementById('matMetodo').value
   });
-  saveData(); closeModal(); renderMateriales();
+  saveData(); closeModal(); renderAll();
   showToast('Compra registrada');
 }
+
 function deleteMaterial(idx) {
   if (confirm('Eliminar esta compra?')) {
     data.materiales.splice(idx, 1);
-    saveData(); renderMateriales();
+    saveData(); renderAll();
     showToast('Compra eliminada');
   }
 }
@@ -1781,7 +1862,6 @@ function renderAll() {
   renderPresupuesto();
   renderGantt();
   renderPagos();
-  renderMateriales();
 }
 
 // INIT
