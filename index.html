@@ -1082,8 +1082,7 @@ function renderDashboard() {
     if (tasks.length === 0) return '';
     let done = 0, curso = 0;
     tasks.forEach(t => {
-      const pi = data.presupuesto.find(p => p.id === t.presupId);
-      const st = pi ? pi.estado : (t.presupId === null ? 'En curso' : 'Sin empezar');
+      const st = getTaskEstado(t);
       if (st === 'Terminado') done++;
       if (st === 'En curso') curso++;
     });
