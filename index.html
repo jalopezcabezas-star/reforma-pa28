@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Reforma Pedro Antonio 28</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #1557b0;
+  --success: #0d904f;
+  --warning: #e8a817;
+  --danger: #d93025;
+  --bg: #f0f2f5;
+  --card: #ffffff;
+  --text: #202124;
+  --text-secondary: #5f6368;
+  --border: #dadce0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+  --radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* NAV */
+.nav {
+  background: var(--primary);
+  color: white;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+.nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+}
+.nav-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.nav-subtitle {
+  padding: 0 16px 8px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+.nav-tabs {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  opacity: 0.7;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-tab:hover { opacity: 0.9; }
+.nav-tab.active {
+  opacity: 1;
+  border-bottom-color: white;
+}
+.share-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.share-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* CONTENT */
+.content {
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+/* STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TABLES */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  background: #f8f9fa;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr:hover { background: #f8f9fa; }
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-success { background: #e6f4ea; color: #137333; }
+.badge-warning { background: #fef7e0; color: #b06000; }
+.badge-danger { background: #fce8e6; color: #c5221f; }
+.badge-info { background: #e8f0fe; color: #1967d2; }
+
+/* SELECT DROPDOWNS */
+select.estado-select, select.pago-select {
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: white;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 110px;
+}
+select.estado-select:focus, select.pago-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+}
+
+/* GANTT */
+.gantt-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.gantt-table {
+  min-width: 900px;
+}
+.gantt-table th, .gantt-table td {
+  text-align: center;
+  padding: 6px 4px;
+  font-size: 11px;
+}
+.gantt-table td:first-child, .gantt-table td:nth-child(2) {
+  text-align: left;
+  white-space: nowrap;
+}
+.gantt-bar {
+  height: 22px;
+  border-radius: 4px;
+  min-width: 100%;
+}
+.gantt-phase {
+  font-weight: 700;
+  font-size: 12px;
+  background: #f0f2f5;
+  color: var(--text);
+}
+.color-elec { background: #4285f4; }
+.color-font { background: #4285f4; }
+.color-alb { background: #ea4335; }
+.color-bano { background: #fbbc04; }
+.color-suelo { background: #34a853; }
+.color-vent { background: #ff6d01; }
+.color-pint { background: #46bdc6; }
+.color-carp { background: #7b1fa2; }
+.color-remate { background: #607d8b; }
+
+.gantt-week-header { font-size: 10px; font-weight: 600; }
+.gantt-date-header { font-size: 9px; color: var(--text-secondary); }
+.gantt-current-week { background: rgba(26,115,232,0.08); }
+
+/* CALENDAR */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.month-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.month-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+  font-size: 12px;
+}
+.day-header {
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  font-size: 10px;
+}
+.day-cell {
+  padding: 6px 2px;
+  border-radius: 6px;
+  min-height: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.day-payment {
+  background: #e8f0fe;
+  color: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+.day-payment-done {
+  background: #e6f4ea;
+  color: var(--success);
+  font-weight: 700;
+}
+.day-payment-last {
+  background: #fef7e0;
+  color: #b06000;
+  font-weight: 700;
+}
+.day-today { border: 2px solid var(--primary); }
+
+/* PAYMENT LIST */
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+.payment-item:hover { background: #f8f9fa; }
+.payment-item.paid { background: #f0faf4; }
+.payment-info { flex: 1; }
+.payment-num { font-weight: 700; font-size: 14px; }
+.payment-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.payment-amount { font-weight: 800; font-size: 18px; margin-left: 12px; }
+
+.check-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.check-circle:hover { border-color: var(--success); }
+.check-circle.checked {
+  background: var(--success);
+  border-color: var(--success);
+}
+.check-circle.checked::after {
+  content: '';
+  width: 8px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+/* PROGRESS RING */
+.progress-ring-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.progress-ring {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+.progress-ring svg {
+  transform: rotate(-90deg);
+  width: 200px;
+  height: 200px;
+}
+.progress-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.progress-ring-pct {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--text);
+}
+.progress-ring-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* PHASE PROGRESS */
+.phase-progress {
+  margin-top: 12px;
+}
+.phase-item {
+  margin-bottom: 12px;
+}
+.phase-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #e8eaed;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+.progress-fill-green { background: linear-gradient(90deg, #0d904f, #34a853); }
+.progress-fill-blue { background: linear-gradient(90deg, #1a73e8, #4285f4); }
+.progress-fill-orange { background: linear-gradient(90deg, #e8a817, #fbbc04); }
+.progress-fill-red { background: linear-gradient(90deg, #c5221f, #ea4335); }
+.progress-fill-purple { background: linear-gradient(90deg, #7b1fa2, #ab47bc); }
+.progress-fill-cyan { background: linear-gradient(90deg, #00838f, #46bdc6); }
+
+/* BUTTONS */
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { background: #f8f9fa; }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #323232;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  max-width: 90%;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.modal h3 { margin-bottom: 16px; font-size: 18px; }
+.modal-field { margin-bottom: 12px; }
+.modal-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+}
+.modal-field input, .modal-field select, .modal-field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.modal-field textarea { min-height: 60px; resize: vertical; }
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* CATEGORY COLORS */
+.cat-electricidad { border-left: 4px solid #4285f4; }
+.cat-fontaneria { border-left: 4px solid #4285f4; }
+.cat-albanileria { border-left: 4px solid #ea4335; }
+.cat-ventanas { border-left: 4px solid #ff6d01; }
+.cat-pintura { border-left: 4px solid #46bdc6; }
+.cat-terraza { border-left: 4px solid #34a853; }
+.cat-cocina { border-left: 4px solid #46bdc6; }
+.cat-banos { border-left: 4px solid #fbbc04; }
+.cat-suelos { border-left: 4px solid #34a853; }
+.cat-carpinteria { border-left: 4px solid #7b1fa2; }
+.cat-calefaccion { border-left: 4px solid #ea4335; }
+.cat-aire { border-left: 4px solid #4285f4; }
+.cat-mobiliario { border-left: 4px solid #ff6d01; }
+.cat-electrodomesticos { border-left: 4px solid #607d8b; }
+.cat-varios { border-left: 4px solid #607d8b; }
+
+.editable {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.editable:hover { background: #e8f0fe; }
+
+.fase-header td {
+  font-weight: 700;
+  background: #f0f2f5;
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+/* SHARE MODAL */
+.share-options {
+  display: grid;
+  gap: 12px;
+}
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.share-option:hover { background: #f8f9fa; border-color: var(--primary); }
+.share-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.share-option-text { font-size: 13px; }
+.share-option-title { font-weight: 700; margin-bottom: 2px; }
+.share-option-desc { color: var(--text-secondary); font-size: 11px; }
+
+/* DELETE ROW BUTTON */
+.delete-row {
+  background: none;
+  border: none;
+  color: #c5221f;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.delete-row:hover { opacity: 1; background: #fce8e6; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .content { padding: 10px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-value { font-size: 20px; }
+  .card { padding: 12px; }
+  td, th { padding: 8px 6px; }
+  .nav-title { font-size: 14px; }
+  .progress-ring, .progress-ring svg { width: 160px; height: 160px; }
+  .progress-ring-pct { font-size: 34px; }
+  .payment-amount { font-size: 15px; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 18px; }
+  .stat-label { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-top">
+    <div>
+      <div class="nav-title">Reforma Pedro Antonio 28</div>
+    </div>
+    <button class="share-btn" onclick="openShareModal()">Compartir</button>
+  </div>
+  <div class="nav-subtitle" id="navSubtitle"></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-tab="dashboard">Dashboard</div>
+    <div class="nav-tab" data-tab="presupuesto">Presupuesto</div>
+    <div class="nav-tab" data-tab="gantt">Gantt</div>
+    <div class="nav-tab" data-tab="pagos">Pagos</div>
+    <div class="nav-tab" data-tab="materiales">Materiales</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="content">
+
+  <!-- DASHBOARD -->
+  <div class="tab-content active" id="tab-dashboard">
+    <div class="stats-grid" id="dashStats"></div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px;">
+      <div class="card">
+        <div class="card-title">Progreso General de la Reforma</div>
+        <div class="progress-ring-container" id="dashRing"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Progreso por Categoria</div>
+        <div id="dashPhaseProgress"></div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:16px;">
+      <div class="card">
+        <div class="card-title">Resumen Financiero</div>
+        <div id="dashFinancial"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Proximos Pagos</div>
+        <div id="dashNextPayments"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Tareas en Curso / Recientes</div>
+      <div id="dashActiveTasks"></div>
+    </div>
+  </div>
+
+  <!-- PRESUPUESTO -->
+  <div class="tab-content" id="tab-presupuesto">
+    <div class="stats-grid" id="presupStats"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="card-title" style="margin-bottom:0">Detalle del Presupuesto</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="addPresupuesto()">+ Anadir partida</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table id="presupTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Categoria</th>
+              <th>Concepto</th>
+              <th>Coste</th>
+              <th>Mat/MO</th>
+              <th>A quien</th>
+              <th>Estado</th>
+              <th>Pagado</th>
+              <th>Comentario</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="presupBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- GANTT -->
+  <div class="tab-content" id="tab-gantt">
+    <div class="card">
+      <div class="card-title" id="ganttTitle"></div>
+      <div class="gantt-container">
+        <table class="gantt-table" id="ganttTable"></table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Leyenda</div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;">
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-elec"></span> Electricidad/Fontaneria</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-alb"></span> Albanileria</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-bano"></span> Banos</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-suelo"></span> Suelos</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-vent"></span> Ventanas</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-pint"></span> Pintura/Cocina</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-carp"></span> Carpinteria</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-remate"></span> Remates</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:8px">
+        <span>Barras rayadas = Terminado</span>
+        <span>Barras solidas = En curso o Sin empezar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGOS -->
+  <div class="tab-content" id="tab-pagos">
+    <div class="stats-grid" id="pagosStats"></div>
+    <div class="card">
+      <div class="card-title">Pagos a Jose Antonio (Cash)</div>
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Haz clic en el circulo para marcar un pago como realizado</p>
+      <div id="pagosList"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calendario de Pagos 2026</div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+  </div>
+
+  <!-- MATERIALES -->
+  <div class="tab-content" id="tab-materiales">
+    <div class="stats-grid" id="matStats"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">Control de Compras de Materiales</div>
+        <button class="btn btn-primary btn-sm" onclick="addMaterial()">+ Anadir compra</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Tienda</th>
+              <th>Concepto</th>
+              <th>Importe</th>
+              <th>Acumulado</th>
+              <th>Restante</th>
+              <th>Metodo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="matBody"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-secondary);">
+        Tiendas habituales: Obramat, Bricodepot, IKEA, Leroy Merlin, Electrodepot
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const STORAGE_KEY = 'reforma_pa28_v4';
+
+const DEFAULT_DATA = {
+  presupuesto: [
+    {id:1,cat:"Electricidad",concepto:"Colocacion de cuadro de fusibles nuevos y realizacion de rozas para colocacion de cableado, interruptores y enchufes nuevos en toda la vivienda con conmutacion en las 4 habitaciones",coste:3600,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:2,cat:"Fontaneria",concepto:"Retirada de toda la fontaneria vieja en toda la vivienda desde el contador y colocacion de tubos nuevos multicapa de 18 en los tres banos y cocina",coste:3500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:4,cat:"Albanileria",concepto:"Retirar todas las puertas",coste:420,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:5,cat:"Albanileria",concepto:"Realizar tabique, habitacion 2",coste:1900,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:6,cat:"Albanileria",concepto:"Picado de todos los azulejos asi como el raseado de la cocina para la colocacion de ceramica. SIN ALICATAR",coste:1700,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Sin alicatar seria 1.700 eur"},
+    {id:7,cat:"Aire Acondicionado",concepto:"Colocacion de aire acondicionado en las 4 habitaciones",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Se anula si se mete calefaccion (ver linea 19)"},
+    {id:8,cat:"Ventanas",concepto:"Colocacion de ventanas en 4 habitaciones, ventana pequena en bano y puerta acristalada en terraza",coste:3200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:9,cat:"Pintura",concepto:"Alisar y pintar el piso",coste:3550,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:10,cat:"Terraza",concepto:"Arreglos en terraza",coste:350,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:11,cat:"Cocina",concepto:"Montaje de cocina, solamente mano de obra",coste:950,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:12,cat:"Banos",concepto:"Bano principal: Picado de todos los azulejos, realizacion de tabique para 2 banos, alicatado, enlechado, colocacion de 2 mamparas nueva y dos platos de ducha. NO incluido 2 grifos de ducha, 2 armarios-lavabo-espejo ni las 2 tazas",coste:7250,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: 2 grifos ducha, 2 armarios-lavabo-espejo, 2 tazas"},
+    {id:13,cat:"Banos",concepto:"Bano habitacion 4: Realizacion de tabique de pladur, alicatado de azulejos, poner plato de ducha y mampara. No incluido grifo ducha, lavabo-espejo, ni taza",coste:4500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: grifo ducha, lavabo-espejo, taza"},
+    {id:14,cat:"Suelos",concepto:"Colocacion de ceramica porcelanico no superior a 15 euros m2 en todo el piso incluido rodapie de madera",coste:4200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:15,cat:"Carpinteria",concepto:"Colocacion de armarios, camas y lamparas. Precios iguales a los de Borja 9",coste:1400,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:16,cat:"Carpinteria",concepto:"Colocacion de puertas nuevas. 290 eur mano de obra y material por unidad (x8)",coste:2320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"8 uds x 290 eur"},
+    {id:17,cat:"Carpinteria",concepto:"Poner manillas y cerraduras en 4 habitaciones",coste:320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:18,cat:"Carpinteria",concepto:"Poner manillas en 3 banos",coste:70,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:19,cat:"Calefaccion",concepto:"Si se mete calefaccion, se anula la partida 7 de 4.500 eur pero se incrementa la fontaneria en 1.000 eur aprovechando los radiadores nuevos y caldera",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Condicional: anula linea 7 (-4.500) + fontaneria (+1.000)"},
+    {id:20,cat:"Aire Acondicionado",concepto:"Aire acondicionado por mi cuenta (800 eur x 4 uds)",coste:3200,tipo:"MO+Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:21,cat:"Mobiliario",concepto:"Mobiliario habitaciones IKEA",coste:2742.35,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:22,cat:"Mobiliario",concepto:"Mobiliario habitaciones Regalos Miguel",coste:324.54,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:23,cat:"Cocina muebles",concepto:"Mobiliario Cocina Bricodepot (sin campanas, ni encimera ni dos puertas que faltaban y un mueble cajonero)",coste:1980,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:24,cat:"Cocina muebles",concepto:"Encimera Leroy (190 eur x 3 uds)",coste:570,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:25,cat:"Electrodomesticos",concepto:"Electrodomesticos Electrodepot (todo menos las campanas)",coste:2179.67,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:26,cat:"Cocina muebles",concepto:"Cajonera cocina y varios",coste:294.75,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:27,cat:"Banos",concepto:"Griferia, lavabos, espejos compra Obramat",coste:1148.15,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:28,cat:"Carpinteria",concepto:"Colocacion de armarios, camas y lamparas (2.100 eur x 4/6)",coste:1400,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:29,cat:"Varios",concepto:"Poyaques",coste:1500,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""}
+  ],
+  materialesPresupuesto: 6190,
+  jaMaterialesIncluidos: 6030,
+  pagos: [
+    {id:1,fecha:"2026-03-24",importe:5000,pagado:false},
+    {id:2,fecha:"2026-04-07",importe:5000,pagado:false},
+    {id:3,fecha:"2026-04-21",importe:5000,pagado:false},
+    {id:4,fecha:"2026-05-07",importe:5000,pagado:false},
+    {id:5,fecha:"2026-05-26",importe:5000,pagado:false},
+    {id:6,fecha:"2026-06-08",importe:5000,pagado:false},
+    {id:7,fecha:"2026-06-30",importe:0,pagado:false,isLast:true}
+  ],
+  materiales: [],
+  ganttTasks: [
+    {id:1,name:"1-Electricidad (rozas, cableado)",presupId:1,weeks:[1,2,3],color:"color-elec",phase:1},
+    {id:2,name:"2-Fontaneria (retirada + tubos nuevos)",presupId:2,weeks:[1,2,3],color:"color-font",phase:1},
+    {id:3,name:"4-Retirar puertas",presupId:4,weeks:[1,2],color:"color-alb",phase:1},
+    {id:4,name:"5-Tabique habitacion 2",presupId:5,weeks:[2,3],color:"color-alb",phase:1},
+    {id:5,name:"6-Picado azulejos + raseado cocina",presupId:6,weeks:[2,3,4],color:"color-alb",phase:1},
+    {id:6,name:"12-Bano principal (tabique, alicatado, mamparas)",presupId:12,weeks:[4,5,6,7],color:"color-bano",phase:2},
+    {id:7,name:"13-Bano hab 4 (pladur, alicatado, mampara)",presupId:13,weeks:[5,6,7],color:"color-bano",phase:2},
+    {id:8,name:"14-Suelos ceramica + rodapie",presupId:14,weeks:[6,7,8,9],color:"color-suelo",phase:2},
+    {id:9,name:"8-Ventanas (4 hab + bano + terraza)",presupId:8,weeks:[8,9],color:"color-vent",phase:3},
+    {id:10,name:"11-Montaje cocina",presupId:11,weeks:[9,10],color:"color-pint",phase:3},
+    {id:11,name:"16-Puertas nuevas (8 uds)",presupId:16,weeks:[9,10],color:"color-carp",phase:3},
+    {id:12,name:"15-Colocacion armarios, camas, lamparas",presupId:15,weeks:[10,11],color:"color-carp",phase:3},
+    {id:13,name:"17/18-Manillas hab + banos",presupId:17,weeks:[10,11],color:"color-carp",phase:3},
+    {id:14,name:"9-Alisar y pintar todo el piso",presupId:9,weeks:[11,12,13],color:"color-pint",phase:4},
+    {id:15,name:"10-Arreglos terraza",presupId:10,weeks:[12,13],color:"color-pint",phase:4},
+    {id:16,name:"Remates, limpieza, poyaques",presupId:29,weeks:[13,14],color:"color-remate",phase:5},
+    {id:17,name:"Entrega final + ultimo pago",presupId:null,weeks:[14],color:"color-remate",phase:5}
+  ],
+  nextId: 30
+};
+
+let data;
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      data = JSON.parse(saved);
+      if (!data.ganttTasks) data.ganttTasks = DEFAULT_DATA.ganttTasks;
+      if (!data.materialesPresupuesto) data.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
+      if (!data.jaMaterialesIncluidos) data.jaMaterialesIncluidos = DEFAULT_DATA.jaMaterialesIncluidos;
+      if (!data.nextId) data.nextId = 30;
+    } else {
+      data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+  } catch(e) {
+    data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// COMPUTED
+// ============================================================
+function getJATotal() { return data.presupuesto.filter(p => p.quien === "Jose Antonio (cash)").reduce((s,p) => s + p.coste, 0); }
+function getJAPagar() { return getJATotal() - data.jaMaterialesIncluidos; }
+function getMisCompras() { return data.presupuesto.filter(p => p.quien === "Comprar y pagar yo").reduce((s,p) => s + p.coste, 0); }
+function getTotalReforma() { return getJAPagar() + getMisCompras(); }
+function getTerminadas() { return data.presupuesto.filter(p => p.estado === "Terminado").length; }
+function getEnCurso() { return data.presupuesto.filter(p => p.estado === "En curso").length; }
+function getSinEmpezar() { return data.presupuesto.filter(p => p.estado === "Sin empezar").length; }
+function getTotalPagado() { return data.pagos.filter(p => p.pagado).reduce((s,p) => s + p.importe, 0); }
+function getTotalPendiente() { return getJAPagar() - getTotalPagado(); }
+function getMatGastado() { return data.materiales.reduce((s,m) => s + (m.importe || 0), 0); }
+
+function updateLastPayment() {
+  const last = data.pagos.find(p => p.isLast);
+  if (last) {
+    const otherTotal = data.pagos.filter(p => !p.isLast).reduce((s,p) => s + p.importe, 0);
+    last.importe = Math.max(0, getJAPagar() - otherTotal);
+  }
+}
+function getFechaInicio() {
+  const fechas = data.pagos.map(p => new Date(p.fecha)).sort((a,b) => a-b);
+  return fechas[0];
+}
+function getFechaFin() {
+  const fechas = data.pagos.map(p => new Date(p.fecha)).sort((a,b) => a-b);
+  return fechas[fechas.length - 1];
+}
+function getNumSemanas() {
+  const inicio = getFechaInicio();
+  const fin = getFechaFin();
+  return Math.ceil((fin - inicio) / (7 * 24 * 60 * 60 * 1000)) + 1;
+}
+function fmtDateLong(d) {
+  return d.toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+}
+function fmtDateShort(d) {
+  return d.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'});
+}
+
+// ============================================================
+// FORMAT
+// ============================================================
+function fmt(n) { return new Intl.NumberFormat('es-ES', {minimumFractionDigits:0, maximumFractionDigits:2}).format(n) + ' \u20AC'; }
+function fmtDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
+}
+function catClass(cat) {
+  const map = {'Electricidad':'electricidad','Fontaneria':'fontaneria','Albanileria':'albanileria','Ventanas':'ventanas','Pintura':'pintura','Terraza':'terraza','Cocina':'cocina','Cocina muebles':'cocina','Banos':'banos','Bano':'banos','Suelos':'suelos','Carpinteria':'carpinteria','Calefaccion':'calefaccion','Aire Acondicionado':'aire','Mobiliario':'mobiliario','Electrodomesticos':'electrodomesticos','Varios':'varios'};
+  return 'cat-' + (map[cat] || 'varios');
+}
+function estadoBadge(e) {
+  if (e === 'Terminado') return '<span class="badge badge-success">Terminado</span>';
+  if (e === 'En curso') return '<span class="badge badge-warning">En curso</span>';
+  return '<span class="badge badge-danger">Sin empezar</span>';
+}
+function pagadoBadge(p) {
+  if (p === 'Pagado') return '<span class="badge badge-success">Pagado</span>';
+  if (p === 'Parcial') return '<span class="badge badge-warning">Parcial</span>';
+  return '<span class="badge badge-info">Sin pagar</span>';
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  updateLastPayment();
+  const total = data.presupuesto.length;
+  const terminadas = getTerminadas();
+  const enCurso = getEnCurso();
+  const sinEmp = getSinEmpezar();
+  const pct = total > 0 ? Math.round((terminadas / total) * 100) : 0;
+  // Weighted progress: terminado=100%, en curso=50%
+  const costeTotal = data.presupuesto.reduce((s,p) => s + p.coste, 0);
+  const costeTerminado = data.presupuesto.filter(p=>p.estado==='Terminado').reduce((s,p) => s + p.coste, 0);
+  const costeCurso = data.presupuesto.filter(p=>p.estado==='En curso').reduce((s,p) => s + p.coste, 0);
+  const pctWeighted = costeTotal > 0 ? Math.round(((costeTerminado + costeCurso * 0.5) / costeTotal) * 100) : 0;
+
+  document.getElementById('dashStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(getTotalReforma())}</div><div class="stat-label">Total Reforma</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(getTotalPagado())}</div><div class="stat-label">Pagado a J.A.</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente J.A.</div></div>
+    <div class="stat-card"><div class="stat-value">${terminadas}/${total}</div><div class="stat-label">Tareas completadas</div></div>
+  `;
+
+  // Progress ring
+  const r = 85;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (pctWeighted / 100) * circ;
+  const color = pctWeighted >= 75 ? '#0d904f' : pctWeighted >= 40 ? '#e8a817' : '#1a73e8';
+
+  document.getElementById('dashRing').innerHTML = `
+    <div class="progress-ring">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="${r}" fill="none" stroke="#e8eaed" stroke-width="12"/>
+        <circle cx="100" cy="100" r="${r}" fill="none" stroke="${color}" stroke-width="12"
+          stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"
+          style="transition: stroke-dashoffset 1s ease"/>
+      </svg>
+      <div class="progress-ring-text">
+        <div class="progress-ring-pct" style="color:${color}">${pctWeighted}%</div>
+        <div class="progress-ring-label">completado</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:20px;font-size:13px;justify-content:center;flex-wrap:wrap">
+      <div style="text-align:center"><strong style="color:#0d904f;font-size:22px">${terminadas}</strong><br>Terminadas</div>
+      <div style="text-align:center"><strong style="color:#e8a817;font-size:22px">${enCurso}</strong><br>En curso</div>
+      <div style="text-align:center"><strong style="color:#ea4335;font-size:22px">${sinEmp}</strong><br>Sin empezar</div>
+    </div>
+  `;
+
+  // Phase progress
+  const cats = {};
+  data.presupuesto.forEach(p => {
+    const c = p.cat;
+    if (!cats[c]) cats[c] = {total:0, terminado:0, enCurso:0};
+    cats[c].total++;
+    if (p.estado === 'Terminado') cats[c].terminado++;
+    if (p.estado === 'En curso') cats[c].enCurso++;
+  });
+  const colors = ['progress-fill-blue','progress-fill-green','progress-fill-orange','progress-fill-red','progress-fill-purple','progress-fill-cyan'];
+  let ci = 0;
+  document.getElementById('dashPhaseProgress').innerHTML = Object.entries(cats).map(([name, v]) => {
+    const pct = Math.round(((v.terminado + v.enCurso * 0.5) / v.total) * 100);
+    const cls = colors[ci++ % colors.length];
+    return `<div class="phase-item">
+      <div class="phase-name"><span>${name}</span><span>${pct}% (${v.terminado}/${v.total})</span></div>
+      <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // Financial
+  document.getElementById('dashFinancial').innerHTML = `
+    <div style="font-size:13px;">
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span>Presupuesto Jose Antonio</span><strong>${fmt(getJATotal())}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span>Materiales incluidos</span><strong>-${fmt(data.jaMaterialesIncluidos)}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-weight:700;color:var(--primary)">
+        <span>A pagar a J.A.</span><strong>${fmt(getJAPagar())}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+        <span>Mis compras</span><strong>${fmt(getMisCompras())}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;font-weight:700;font-size:15px;color:var(--danger)">
+        <span>TOTAL REFORMA</span><strong>${fmt(getTotalReforma())}</strong>
+      </div>
+    </div>
+  `;
+
+  // Next payments
+  const pending = data.pagos.filter(p => !p.pagado);
+  document.getElementById('dashNextPayments').innerHTML = pending.length === 0
+    ? '<p style="font-size:13px;color:var(--success);font-weight:600">Todos los pagos realizados</p>'
+    : pending.slice(0, 3).map(p => `
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+        <span>Pago ${p.id}${p.isLast?' (ultimo)':''} - ${fmtDate(p.fecha)}</span>
+        <strong>${fmt(p.importe)}</strong>
+      </div>
+    `).join('');
+
+  // Active tasks
+  const active = [...data.presupuesto.filter(p => p.estado === 'En curso'), ...data.presupuesto.filter(p => p.estado === 'Terminado')].slice(0, 8);
+  document.getElementById('dashActiveTasks').innerHTML = active.length === 0
+    ? '<p style="font-size:13px;color:var(--text-secondary)">Ninguna tarea en curso todavia</p>'
+    : `<div class="table-wrapper"><table><thead><tr><th>Categoria</th><th>Concepto</th><th>Coste</th><th>Estado</th><th>Pagado</th></tr></thead><tbody>
+      ${active.map(t => `<tr class="${catClass(t.cat)}"><td>${t.cat}</td><td style="max-width:250px;font-size:12px">${t.concepto}</td><td>${fmt(t.coste)}</td><td>${estadoBadge(t.estado)}</td><td>${pagadoBadge(t.pagado)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+// ============================================================
+// PRESUPUESTO
+// ============================================================
+function renderPresupuesto() {
+  updateLastPayment();
+  document.getElementById('presupStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(getJAPagar())}</div><div class="stat-label">A pagar J.A.</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--warning)">${fmt(getMisCompras())}</div><div class="stat-label">Mis compras</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalReforma())}</div><div class="stat-label">Total reforma</div></div>
+    <div class="stat-card"><div class="stat-value">${getTerminadas()}/${data.presupuesto.length}</div><div class="stat-label">Terminadas</div></div>
+  `;
+
+  document.getElementById('presupBody').innerHTML = data.presupuesto.map((p, i) => `
+    <tr class="${catClass(p.cat)}">
+      <td>${p.id}</td>
+      <td><strong>${p.cat}</strong></td>
+      <td style="max-width:280px;font-size:12px" class="editable" onclick="editPresupField(${i},'concepto')">${p.concepto}</td>
+      <td style="white-space:nowrap" class="editable" onclick="editPresupField(${i},'coste')"><strong>${fmt(p.coste)}</strong></td>
+      <td>${p.tipo}</td>
+      <td style="font-size:11px">${p.quien}</td>
+      <td>
+        <select class="estado-select" onchange="changeEstado(${i}, this.value)" style="background:${p.estado==='Terminado'?'#e6f4ea':p.estado==='En curso'?'#fef7e0':'#fce8e6'}">
+          <option ${p.estado==='Sin empezar'?'selected':''}>Sin empezar</option>
+          <option ${p.estado==='En curso'?'selected':''}>En curso</option>
+          <option ${p.estado==='Terminado'?'selected':''}>Terminado</option>
+        </select>
+      </td>
+      <td>
+        <select class="pago-select" onchange="changePagado(${i}, this.value)" style="background:${p.pagado==='Pagado'?'#e6f4ea':p.pagado==='Parcial'?'#fef7e0':'#e8f0fe'}">
+          <option ${p.pagado==='Sin pagar'?'selected':''}>Sin pagar</option>
+          <option ${p.pagado==='Parcial'?'selected':''}>Parcial</option>
+          <option ${p.pagado==='Pagado'?'selected':''}>Pagado</option>
+        </select>
+      </td>
+      <td style="font-size:11px;max-width:180px;color:var(--text-secondary)" class="editable" onclick="editPresupField(${i},'comentario')">${p.comentario || '<span style=color:#ccc>+ comentario</span>'}</td>
+      <td><button class="delete-row" onclick="deletePresupuesto(${i})" title="Eliminar">&times;</button></td>
+    </tr>
+  `).join('');
+}
+
+function changeEstado(idx, val) {
+  data.presupuesto[idx].estado = val;
+  saveData(); renderAll();
+  showToast('Estado actualizado: ' + val);
+}
+function changePagado(idx, val) {
+  data.presupuesto[idx].pagado = val;
+  saveData(); renderAll();
+  showToast('Pago actualizado: ' + val);
+}
+
+function editPresupField(idx, field) {
+  const p = data.presupuesto[idx];
+  let newVal;
+  if (field === 'coste') {
+    newVal = prompt('Coste (EUR):', p.coste);
+    if (newVal !== null && newVal !== '') {
+      p.coste = parseFloat(newVal) || 0;
+      saveData(); renderAll();
+      showToast('Coste actualizado');
+    }
+  } else {
+    newVal = prompt(field === 'concepto' ? 'Concepto:' : 'Comentario:', p[field] || '');
+    if (newVal !== null) {
+      p[field] = newVal;
+      saveData(); renderAll();
+      showToast(field.charAt(0).toUpperCase() + field.slice(1) + ' actualizado');
+    }
+  }
+}
+
+function addPresupuesto() {
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>Anadir Nueva Partida</h3>
+    <div class="modal-field"><label>Categoria</label>
+      <select id="pCat">
+        <option>Electricidad</option><option>Fontaneria</option><option>Albanileria</option>
+        <option>Ventanas</option><option>Pintura</option><option>Terraza</option>
+        <option>Cocina</option><option>Cocina muebles</option><option>Banos</option>
+        <option>Suelos</option><option>Carpinteria</option><option>Calefaccion</option>
+        <option>Aire Acondicionado</option><option>Mobiliario</option><option>Electrodomesticos</option>
+        <option>Varios</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Concepto</label><textarea id="pConcepto" placeholder="Descripcion del trabajo..."></textarea></div>
+    <div class="modal-field"><label>Coste (EUR)</label><input type="number" id="pCoste" step="0.01" placeholder="0.00"></div>
+    <div class="modal-field"><label>Tipo</label>
+      <select id="pTipo"><option>MO+Mat</option><option>MO</option><option>Mat</option></select>
+    </div>
+    <div class="modal-field"><label>A quien pagar</label>
+      <select id="pQuien"><option>Jose Antonio (cash)</option><option>Comprar y pagar yo</option></select>
+    </div>
+    <div class="modal-field"><label>Comentario (opcional)</label><input type="text" id="pComentario" placeholder="Notas..."></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePresupuesto()">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function savePresupuesto() {
+  const item = {
+    id: data.nextId++,
+    cat: document.getElementById('pCat').value,
+    concepto: document.getElementById('pConcepto').value,
+    coste: parseFloat(document.getElementById('pCoste').value) || 0,
+    tipo: document.getElementById('pTipo').value,
+    quien: document.getElementById('pQuien').value,
+    estado: 'Sin empezar',
+    pagado: 'Sin pagar',
+    comentario: document.getElementById('pComentario').value
+  };
+  if (!item.concepto) { showToast('Escribe un concepto'); return; }
+  data.presupuesto.push(item);
+  saveData(); closeModal(); renderAll();
+  showToast('Partida anadida');
+}
+
+function deletePresupuesto(idx) {
+  const p = data.presupuesto[idx];
+  if (confirm(`Eliminar "${p.concepto.substring(0,60)}..."?`)) {
+    data.presupuesto.splice(idx, 1);
+    saveData(); renderAll();
+    showToast('Partida eliminada');
+  }
+}
+
+// ============================================================
+// GANTT
+// ============================================================
+function renderGantt() {
+  // Calculate weeks dynamically from first payment date
+  const inicio = getFechaInicio();
+  // Start from the Monday of the week of the first payment
+  const startDate = new Date(inicio);
+  const dayOfWeek = startDate.getDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  startDate.setDate(startDate.getDate() + diffToMonday);
+
+  const numWeeks = getNumSemanas();
+  const weekDates = [];
+  const weekStarts = [];
+  for (let i = 0; i < numWeeks; i++) {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + i * 7);
+    weekStarts.push(d);
+    weekDates.push(fmtDateShort(d));
+  }
+
+  const phases = [
+    {name:"FASE 1: DEMOLICION Y OBRA GRUESA", phase:1},
+    {name:"FASE 2: ALBANILERIA Y BANOS", phase:2},
+    {name:"FASE 3: VENTANAS, COCINA Y CARPINTERIA", phase:3},
+    {name:"FASE 4: ACABADOS", phase:4},
+    {name:"FASE 5: REMATES Y ENTREGA", phase:5}
+  ];
+
+  const now = new Date();
+  let currentWeek = -1;
+  for (let i = 0; i < weekStarts.length; i++) {
+    const end = new Date(weekStarts[i]); end.setDate(end.getDate() + 6);
+    if (now >= weekStarts[i] && now <= end) { currentWeek = i + 1; break; }
+  }
+
+  let html = '<thead><tr><th style="min-width:30px">#</th><th style="min-width:200px">Tarea</th>';
+  for (let w = 1; w <= numWeeks; w++) {
+    html += `<th class="gantt-week-header ${w===currentWeek?'gantt-current-week':''}">S${w}<br><span class="gantt-date-header">${weekDates[w-1]}</span></th>`;
+  }
+  html += '<th>Estado</th></tr></thead><tbody>';
+
+  let taskNum = 1;
+  for (const phase of phases) {
+    html += `<tr class="fase-header"><td colspan="${numWeeks+3}">${phase.name}</td></tr>`;
+    const tasks = data.ganttTasks.filter(t => t.phase === phase.phase);
+    for (const task of tasks) {
+      const presupItem = data.presupuesto.find(p => p.id === task.presupId);
+      const estado = presupItem ? presupItem.estado : 'Sin empezar';
+      html += `<tr><td>${taskNum}</td><td style="font-size:11px">${task.name}</td>`;
+      for (let w = 1; w <= numWeeks; w++) {
+        const hasBar = task.weeks.includes(w);
+        const isCurrent = w === currentWeek;
+        if (hasBar) {
+          const pattern = estado === 'Terminado' ? 'background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,0.3) 3px,rgba(255,255,255,0.3) 6px);' : '';
+          const opacity = estado === 'Terminado' ? '0.5' : '1';
+          html += `<td class="${isCurrent?'gantt-current-week':''}"><div class="gantt-bar ${task.color}" style="opacity:${opacity};${pattern}"></div></td>`;
+        } else {
+          html += `<td class="${isCurrent?'gantt-current-week':''}"></td>`;
+        }
+      }
+      html += `<td>${estadoBadge(estado)}</td></tr>`;
+      taskNum++;
+    }
+  }
+  html += '</tbody>';
+  document.getElementById('ganttTable').innerHTML = html;
+}
+
+// ============================================================
+// PAGOS
+// ============================================================
+function renderPagos() {
+  updateLastPayment();
+  const totalAPagar = getJAPagar();
+  const totalPagado = getTotalPagado();
+  const pctPagado = totalAPagar > 0 ? Math.round(totalPagado / totalAPagar * 100) : 0;
+
+  document.getElementById('pagosStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(totalAPagar)}</div><div class="stat-label">Total a pagar J.A.</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--success)">${fmt(totalPagado)}</div><div class="stat-label">Pagado</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--danger)">${fmt(getTotalPendiente())}</div><div class="stat-label">Pendiente</div></div>
+    <div class="stat-card"><div class="stat-value">${pctPagado}%</div><div class="stat-label">% Pagado</div></div>
+  `;
+
+  document.getElementById('pagosList').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="progress-bar" style="height:14px;border-radius:7px"><div class="progress-fill progress-fill-green" style="width:${pctPagado}%;border-radius:7px"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px">
+        <span>${fmt(totalPagado)} pagado</span><span>${fmt(getTotalPendiente())} pendiente</span>
+      </div>
+    </div>
+    ${data.pagos.map(p => `
+      <div class="payment-item ${p.pagado ? 'paid' : ''}" onclick="togglePago(${p.id})">
+        <div class="payment-info">
+          <div class="payment-num">Pago ${p.id} ${p.isLast ? '(ultimo - ajuste)' : ''}</div>
+          <div class="payment-date">${fmtDate(p.fecha)}</div>
+        </div>
+        <div class="payment-amount" style="color:${p.pagado ? 'var(--success)' : 'var(--text)'}">${fmt(p.importe)}</div>
+        <div class="check-circle ${p.pagado ? 'checked' : ''}"></div>
+      </div>
+    `).join('')}
+  `;
+
+  renderCalendar();
+}
+
+function togglePago(id) {
+  const pago = data.pagos.find(p => p.id === id);
+  if (pago) {
+    pago.pagado = !pago.pagado;
+    saveData(); renderAll();
+    showToast(pago.pagado ? 'Pago ' + id + ' marcado como pagado' : 'Pago ' + id + ' desmarcado');
+  }
+}
+
+function renderCalendar() {
+  // Derive months from first and last payment dates
+  const inicio = getFechaInicio();
+  const fin = getFechaFin();
+  const months = [];
+  const monthNames = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  let cur = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+  const last = new Date(fin.getFullYear(), fin.getMonth(), 1);
+  while (cur <= last) {
+    months.push({name: monthNames[cur.getMonth()] + ' ' + cur.getFullYear(), year: cur.getFullYear(), month: cur.getMonth()});
+    cur.setMonth(cur.getMonth() + 1);
+  }
+  const days = ['L','M','X','J','V','S','D'];
+  const today = new Date();
+  const paymentDates = {};
+  data.pagos.forEach(p => {
+    const d = new Date(p.fecha);
+    paymentDates[`${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`] = p;
+  });
+
+  document.getElementById('calendarGrid').innerHTML = months.map(m => {
+    const firstDay = new Date(m.year, m.month, 1);
+    const lastDay = new Date(m.year, m.month + 1, 0).getDate();
+    let startDay = firstDay.getDay() - 1;
+    if (startDay < 0) startDay = 6;
+
+    let cells = days.map(d => `<div class="day-header">${d}</div>`).join('');
+    for (let i = 0; i < startDay; i++) cells += '<div class="day-cell"></div>';
+    for (let d = 1; d <= lastDay; d++) {
+      const key = `${m.year}-${m.month}-${d}`;
+      const payment = paymentDates[key];
+      const isToday = today.getFullYear() === m.year && today.getMonth() === m.month && today.getDate() === d;
+      let cls = 'day-cell';
+      if (payment) cls += payment.pagado ? ' day-payment-done' : (payment.isLast ? ' day-payment-last' : ' day-payment');
+      if (isToday) cls += ' day-today';
+      cells += `<div class="${cls}" ${payment ? `onclick="togglePago(${payment.id})" style="cursor:pointer" title="Pago ${payment.id}: ${payment.importe} EUR"` : ''}>${d}${payment ? '<div style="font-size:7px">P'+payment.id+'</div>' : ''}</div>`;
+    }
+    return `<div class="month-card"><div class="month-title">${m.name}</div><div class="month-grid">${cells}</div></div>`;
+  }).join('');
+}
+
+// ============================================================
+// MATERIALES
+// ============================================================
+function renderMateriales() {
+  const gastado = getMatGastado();
+  const restante = data.materialesPresupuesto - gastado;
+  const pct = data.materialesPresupuesto > 0 ? Math.round(gastado / data.materialesPresupuesto * 100) : 0;
+
+  document.getElementById('matStats').innerHTML = `
+    <div class="stat-card"><div class="stat-value" style="color:var(--primary)">${fmt(data.materialesPresupuesto)}</div><div class="stat-label">Presup. Materiales</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--warning)">${fmt(gastado)}</div><div class="stat-label">Gastado</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:${restante>=0?'var(--success)':'var(--danger)'}">${fmt(restante)}</div><div class="stat-label">Restante</div></div>
+    <div class="stat-card"><div class="stat-value">${pct}%</div><div class="stat-label">% Usado</div></div>
+  `;
+
+  let acumulado = 0;
+  document.getElementById('matBody').innerHTML = data.materiales.length === 0
+    ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas. Pulsa "+ Anadir compra" para empezar.</td></tr>'
+    : data.materiales.map((m, i) => {
+      acumulado += m.importe || 0;
+      const rest = data.materialesPresupuesto - acumulado;
+      return `<tr>
+        <td>${i+1}</td><td>${fmtDate(m.fecha)}</td><td>${m.tienda||'-'}</td>
+        <td style="max-width:200px;font-size:12px">${m.concepto||'-'}</td>
+        <td><strong>${m.importe?fmt(m.importe):'-'}</strong></td>
+        <td>${fmt(acumulado)}</td>
+        <td style="color:${rest>=0?'var(--success)':'var(--danger)'}">${fmt(rest)}</td>
+        <td style="font-size:11px">${m.metodo||'-'}</td>
+        <td><button class="delete-row" onclick="deleteMaterial(${i})">&times;</button></td>
+      </tr>`;
+    }).join('');
+}
+
+function addMaterial() {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Anadir Compra de Material</h3>
+    <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha"></div>
+    <div class="modal-field"><label>Tienda</label>
+      <select id="matTienda"><option value="">Seleccionar...</option>
+        <option>Obramat</option><option>Bricodepot</option><option>IKEA</option>
+        <option>Leroy Merlin</option><option>Electrodepot</option><option>Otra</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripcion de la compra"></div>
+    <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" placeholder="0.00"></div>
+    <div class="modal-field"><label>Metodo de pago</label>
+      <select id="matMetodo"><option>Transferencia</option><option>Tarjeta</option><option>Bizum</option><option>Efectivo</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMaterial()">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveMaterial() {
+  data.materiales.push({
+    fecha: document.getElementById('matFecha').value,
+    tienda: document.getElementById('matTienda').value,
+    concepto: document.getElementById('matConcepto').value,
+    importe: parseFloat(document.getElementById('matImporte').value) || 0,
+    metodo: document.getElementById('matMetodo').value
+  });
+  saveData(); closeModal(); renderMateriales();
+  showToast('Compra registrada');
+}
+function deleteMaterial(idx) {
+  if (confirm('Eliminar esta compra?')) {
+    data.materiales.splice(idx, 1);
+    saveData(); renderMateriales();
+    showToast('Compra eliminada');
+  }
+}
+
+// ============================================================
+// SHARE
+// ============================================================
+function openShareModal() {
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Compartir con tu reformista</h3>
+    <div class="share-options">
+      <div class="share-option" onclick="shareFile()">
+        <div class="share-icon" style="background:#e8f0fe;color:var(--primary)">📄</div>
+        <div class="share-option-text">
+          <div class="share-option-title">Generar archivo compartible</div>
+          <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales. Se lo puedes enviar por WhatsApp, email, etc. El lo abre en su movil o PC y ve todo.</div>
+        </div>
+      </div>
+      <div class="share-option" onclick="exportJSON()">
+        <div class="share-icon" style="background:#e6f4ea;color:var(--success)">💾</div>
+        <div class="share-option-text">
+          <div class="share-option-title">Exportar datos (backup)</div>
+          <div class="share-option-desc">Descarga un archivo JSON con todos los datos para backup o para importar en otro dispositivo.</div>
+        </div>
+      </div>
+      <div class="share-option" onclick="importJSON()">
+        <div class="share-icon" style="background:#fef7e0;color:var(--warning)">📥</div>
+        <div class="share-option-text">
+          <div class="share-option-title">Importar datos</div>
+          <div class="share-option-desc">Carga un archivo JSON exportado previamente para restaurar o sincronizar datos.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-outline" onclick="closeModal()">Cerrar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function shareFile() {
+  closeModal();
+  showToast('Generando archivo compartible...');
+  // Clone current page HTML and embed current data
+  const currentData = JSON.stringify(data);
+  const html = document.documentElement.outerHTML.replace(
+    "const STORAGE_KEY = 'reforma_pa28_v4';",
+    "const STORAGE_KEY = 'reforma_pa28_v4_shared';"
+  ).replace(
+    '// INIT\nloadData();\nrenderAll();',
+    `// INIT - SHARED VERSION WITH EMBEDDED DATA
+const EMBEDDED_DATA = ${currentData};
+if (!localStorage.getItem('reforma_pa28_v4_shared')) {
+  localStorage.setItem('reforma_pa28_v4_shared', JSON.stringify(EMBEDDED_DATA));
+}
+loadData();
+renderAll();`
+  );
+
+  // Simpler approach: inject data before init
+  const blob = new Blob([`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Reforma Pedro Antonio 28 - Vista Compartida</title>
+</head>
+<body>
+<script>
+// Pre-load shared data
+const SHARED_DATA = ${currentData};
+localStorage.setItem('reforma_pa28_v4', JSON.stringify(SHARED_DATA));
+window.location.href = window.location.href.replace(/[^/]*$/, 'index.html');
+<\/script>
+<p style="font-family:sans-serif;padding:20px;text-align:center">Cargando reforma...</p>
+</body></html>`], {type: 'text/html'});
+
+  // Actually, better approach: generate fully self-contained file
+  const selfContained = document.documentElement.cloneNode(true);
+  // Inject data into the script
+  const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML
+    .replace(
+      'loadData();\nrenderAll();',
+      `// SHARED VERSION - Data embedded
+try {
+  const shared = ${currentData};
+  if (!localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, JSON.stringify(shared));
+} catch(e) {}
+loadData();
+renderAll();`
+    );
+
+  const blob2 = new Blob([fullHtml], {type: 'text/html'});
+  const url = URL.createObjectURL(blob2);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Reforma_Pedro_Antonio_28.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  setTimeout(() => showToast('Archivo descargado. Enviale el archivo a tu reformista por WhatsApp o email.'), 500);
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'reforma_pa28_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  closeModal();
+  showToast('Backup exportado');
+}
+
+function importJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (imported.presupuesto && imported.pagos) {
+          data = imported;
+          saveData();
+          closeModal();
+          renderAll();
+          showToast('Datos importados correctamente');
+        } else {
+          showToast('Archivo no valido');
+        }
+      } catch(e) {
+        showToast('Error al leer el archivo');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// ============================================================
+// NAV + INIT
+// ============================================================
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+function updateDynamicDates() {
+  const inicio = getFechaInicio();
+  const fin = getFechaFin();
+  const semanas = getNumSemanas();
+  document.getElementById('navSubtitle').textContent = 'Inicio: ' + fmtDateLong(inicio) + ' | Fin: ' + fmtDateLong(fin) + ' | ' + semanas + ' semanas';
+  document.getElementById('ganttTitle').textContent = 'Diagrama de Gantt - ' + semanas + ' Semanas (' + fmtDateShort(inicio) + ' - ' + fmtDateShort(fin) + ')';
+}
+
+function renderAll() {
+  updateDynamicDates();
+  renderDashboard();
+  renderPresupuesto();
+  renderGantt();
+  renderPagos();
+  renderMateriales();
+}
+
+// INIT
+loadData();
+renderAll();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') { loadData(); renderAll(); }
+});
+</script>
+</body>
+</html>
