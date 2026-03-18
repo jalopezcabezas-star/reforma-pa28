@@ -670,7 +670,7 @@ select.estado-select:focus, select.pago-select:focus {
         <div id="dashFinancial"></div>
       </div>
     </div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px;">
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
       <div class="card" style="padding:12px">
         <div class="card-title" style="font-size:14px;margin-bottom:8px">Calendario</div>
         <div id="dashAllPayments"></div>
@@ -678,10 +678,6 @@ select.estado-select:focus, select.pago-select:focus {
       <div class="card" style="padding:12px">
         <div class="card-title" style="font-size:14px;margin-bottom:8px">Fechas Clave</div>
         <div id="dashTimeline"></div>
-      </div>
-      <div class="card" style="padding:12px">
-        <div class="card-title" style="font-size:14px;margin-bottom:8px">Materiales</div>
-        <div id="dashMateriales"></div>
       </div>
     </div>
     <div class="card" style="padding:12px">
@@ -1148,14 +1144,18 @@ function renderDashboard() {
   const y1 = today.getFullYear();
   const m2 = m1 === 11 ? 0 : m1 + 1;
   const y2 = m1 === 11 ? y1 + 1 : y1;
-  document.getElementById('dashAllPayments').innerHTML = buildMiniCal(y1, m1) + buildMiniCal(y2, m2)
-    + `<div style="display:flex;gap:10px;justify-content:center;font-size:11px;margin-top:4px;flex-wrap:wrap">
+  document.getElementById('dashAllPayments').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>${buildMiniCal(y1, m1)}</div>
+      <div>${buildMiniCal(y2, m2)}</div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;font-size:11px;margin-top:6px;flex-wrap:wrap">
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1b4332;vertical-align:middle"></span> Hoy</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fef7e0;border:1px solid #e8a817;vertical-align:middle"></span> Pago</span>
       <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d8f3dc;border:1px solid #0d904f;vertical-align:middle"></span> Pagado</span>
     </div>`;
 
-  // Timeline / key dates
+  // Timeline / key dates with delay tracking
   const inicio = getFechaInicio();
   const fin = getFechaFin();
   const now = new Date();
@@ -1163,44 +1163,37 @@ function renderDashboard() {
   const diasTranscurridos = Math.max(0, Math.ceil((now - inicio) / (1000*60*60*24)));
   const diasRestantes = Math.max(0, Math.ceil((fin - now) / (1000*60*60*24)));
   const pctTime = diasTotal > 0 ? Math.min(100, Math.round((diasTranscurridos / diasTotal) * 100)) : 0;
+  // Calculate expected progress vs actual to detect delay
+  const pctObra = pctWeighted; // actual work progress
+  const semanasRetraso = pctTime > 0 && pctObra < pctTime ? Math.round((pctTime - pctObra) * diasTotal / 700) : 0;
+  // Expected end date accounting for delay
+  const finEsperado = semanasRetraso > 0 ? new Date(fin.getTime() + semanasRetraso * 7 * 24*60*60*1000) : fin;
+
   document.getElementById('dashTimeline').innerHTML = `
-    <div style="font-size:13px">
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Inicio reforma</span><strong>${fmtDateLong(inicio)}</strong>
+    <div style="font-size:12px">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Inicio</span><strong>${fmtDateLong(inicio)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Fin previsto</span><strong>${fmtDateLong(fin)}</strong>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+        <span>Fin planificado</span><strong>${fmtDateLong(fin)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Duracion total</span><strong>${diasTotal} dias (${getNumSemanas()} sem.)</strong>
+      ${semanasRetraso > 0 ? `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--danger)">
+        <span>Fin esperado</span><strong>${fmtDateLong(finEsperado)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Dias restantes</span><strong style="color:${diasRestantes<=14?'var(--danger)':'var(--text)'}">${diasRestantes} dias</strong>
-      </div>
-      <div style="margin-top:8px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>Tiempo transcurrido</span><span>${pctTime}%</span></div>
+      <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--danger)">
+        <span>Retraso estimado</span><strong>${semanasRetraso} sem.</strong>
+      </div>` : `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);color:var(--success)">
+        <span>Retraso</span><strong>Sin retraso</strong>
+      </div>`}
+      <div style="margin-top:8px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>Tiempo</span><span>${diasTranscurridos}d / ${diasTotal}d (${pctTime}%)</span></div>
         <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:4px"></div></div>
       </div>
-    </div>
-  `;
-
-  // Materiales summary
-  const matGastado = getMatGastado();
-  const matCount = data.materiales.length;
-  document.getElementById('dashMateriales').innerHTML = `
-    <div style="font-size:13px">
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Articulos comprados</span><strong>${matCount}</strong>
+      <div style="margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>Obra</span><span>${pctObra}%</span></div>
+        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:#52b788;border-radius:4px"></div></div>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Total gastado</span><strong>${fmt(matGastado)}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
-        <span>Presup. materiales</span><strong>${fmt(getMisCompras())}</strong>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0">
-        <span>Restante</span><strong style="color:${getMisCompras()-matGastado>=0?'var(--success)':'var(--danger)'}">${fmt(getMisCompras() - matGastado)}</strong>
-      </div>
+      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:14px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">${diasRestantes} dias restantes</div>
     </div>
   `;
 
