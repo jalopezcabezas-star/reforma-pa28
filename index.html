@@ -907,7 +907,7 @@ function showToast(msg) {
 function getJATotal() { return data.presupuesto.filter(p => p.quien === "Jose Antonio (cash)").reduce((s,p) => s + p.coste, 0); }
 function getJAPagar() { return getJATotal() - data.jaMaterialesIncluidos; }
 function getMisCompras() { return data.presupuesto.filter(p => p.quien === "Comprar y pagar yo").reduce((s,p) => s + p.coste, 0); }
-function getTotalReforma() { return getJAPagar() + getMisCompras(); }
+function getTotalReforma() { return data.presupuesto.reduce((s,p) => s + p.coste, 0); }
 function getTerminadas() { return data.presupuesto.filter(p => p.estado === "Terminado").length; }
 function getEnCurso() { return data.presupuesto.filter(p => p.estado === "En curso").length; }
 function getSinEmpezar() { return data.presupuesto.filter(p => p.estado === "Sin empezar").length; }
