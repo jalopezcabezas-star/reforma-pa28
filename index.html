@@ -6,19 +6,22 @@
 <title>Reforma Pedro Antonio 28</title>
 <style>
 :root {
-  --primary: #1a73e8;
-  --primary-dark: #1557b0;
-  --success: #0d904f;
+  --primary: #2d6a4f;
+  --primary-dark: #1b4332;
+  --primary-light: #40916c;
+  --primary-lighter: #52b788;
+  --success: #2d6a4f;
   --warning: #e8a817;
   --danger: #d93025;
-  --bg: #f0f2f5;
+  --bg: #f1f5f2;
   --card: #ffffff;
-  --text: #202124;
-  --text-secondary: #5f6368;
-  --border: #dadce0;
-  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-  --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+  --text: #1b4332;
+  --text-secondary: #52796f;
+  --border: #d8e2dc;
+  --shadow: 0 1px 3px rgba(27,67,50,0.1), 0 1px 2px rgba(27,67,50,0.06);
+  --shadow-lg: 0 4px 12px rgba(27,67,50,0.12);
   --radius: 12px;
+  --accent: #b7e4c7;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +34,7 @@ body {
 
 /* NAV */
 .nav {
-  background: var(--primary);
+  background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
   color: white;
   padding: 0;
   position: sticky;
@@ -79,8 +82,8 @@ body {
   border-bottom-color: white;
 }
 .share-btn {
-  background: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.35);
   color: white;
   padding: 6px 14px;
   border-radius: 20px;
@@ -90,7 +93,7 @@ body {
   transition: all 0.2s;
   white-space: nowrap;
 }
-.share-btn:hover { background: rgba(255,255,255,0.3); }
+.share-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* CONTENT */
 .content {
@@ -184,10 +187,10 @@ tr:hover { background: #f8f9fa; }
   font-weight: 600;
   white-space: nowrap;
 }
-.badge-success { background: #e6f4ea; color: #137333; }
+.badge-success { background: #d8f3dc; color: #1b4332; }
 .badge-warning { background: #fef7e0; color: #b06000; }
 .badge-danger { background: #fce8e6; color: #c5221f; }
-.badge-info { background: #e8f0fe; color: #1967d2; }
+.badge-info { background: #d8f3dc; color: #2d6a4f; }
 
 /* SELECT DROPDOWNS */
 select.estado-select, select.pago-select {
@@ -245,10 +248,11 @@ select.estado-select:focus, select.pago-select:focus {
 .color-pint { background: #46bdc6; }
 .color-carp { background: #7b1fa2; }
 .color-remate { background: #607d8b; }
+.color-org { background: #2d6a4f; }
 
 .gantt-week-header { font-size: 10px; font-weight: 600; }
 .gantt-date-header { font-size: 9px; color: var(--text-secondary); }
-.gantt-current-week { background: rgba(26,115,232,0.08); }
+.gantt-current-week { background: rgba(45,106,79,0.08); }
 
 /* CALENDAR */
 .calendar-grid {
@@ -292,14 +296,14 @@ select.estado-select:focus, select.pago-select:focus {
   font-size: 12px;
 }
 .day-payment {
-  background: #e8f0fe;
+  background: #d8f3dc;
   color: var(--primary);
   font-weight: 700;
   cursor: pointer;
 }
 .day-payment-done {
-  background: #e6f4ea;
-  color: var(--success);
+  background: #b7e4c7;
+  color: #1b4332;
   font-weight: 700;
 }
 .day-payment-last {
@@ -322,7 +326,7 @@ select.estado-select:focus, select.pago-select:focus {
   margin-bottom: 4px;
 }
 .payment-item:hover { background: #f8f9fa; }
-.payment-item.paid { background: #f0faf4; }
+.payment-item.paid { background: #f0f7f2; }
 .payment-info { flex: 1; }
 .payment-num { font-weight: 700; font-size: 14px; }
 .payment-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
@@ -343,8 +347,8 @@ select.estado-select:focus, select.pago-select:focus {
 }
 .check-circle:hover { border-color: var(--success); }
 .check-circle.checked {
-  background: var(--success);
-  border-color: var(--success);
+  background: #2d6a4f;
+  border-color: #2d6a4f;
 }
 .check-circle.checked::after {
   content: '';
@@ -415,12 +419,12 @@ select.estado-select:focus, select.pago-select:focus {
   border-radius: 5px;
   transition: width 0.6s ease;
 }
-.progress-fill-green { background: linear-gradient(90deg, #0d904f, #34a853); }
-.progress-fill-blue { background: linear-gradient(90deg, #1a73e8, #4285f4); }
+.progress-fill-green { background: linear-gradient(90deg, #2d6a4f, #52b788); }
+.progress-fill-blue { background: linear-gradient(90deg, #1b4332, #40916c); }
 .progress-fill-orange { background: linear-gradient(90deg, #e8a817, #fbbc04); }
 .progress-fill-red { background: linear-gradient(90deg, #c5221f, #ea4335); }
 .progress-fill-purple { background: linear-gradient(90deg, #7b1fa2, #ab47bc); }
-.progress-fill-cyan { background: linear-gradient(90deg, #00838f, #46bdc6); }
+.progress-fill-cyan { background: linear-gradient(90deg, #2d6a4f, #74c69d); }
 
 /* BUTTONS */
 .btn {
@@ -432,8 +436,8 @@ select.estado-select:focus, select.pago-select:focus {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: var(--primary-dark); }
+.btn-primary { background: linear-gradient(135deg, #2d6a4f, #40916c); color: white; }
+.btn-primary:hover { background: linear-gradient(135deg, #1b4332, #2d6a4f); }
 .btn-success { background: var(--success); color: white; }
 .btn-danger { background: var(--danger); color: white; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
@@ -605,8 +609,19 @@ select.estado-select:focus, select.pago-select:focus {
 
 <div class="nav">
   <div class="nav-top">
-    <div>
-      <div class="nav-title">Reforma Pedro Antonio 28</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style="flex-shrink:0">
+        <rect width="34" height="34" rx="8" fill="rgba(255,255,255,0.15)"/>
+        <path d="M8 24V12l9-5 9 5v12l-9 5-9-5z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M17 7v10" stroke="white" stroke-width="1.5"/>
+        <path d="M8 12l9 5 9-5" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M12 19v-4l5-2.5" stroke="rgba(183,228,199,0.8)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M22 19v-4l-5-2.5" stroke="rgba(183,228,199,0.8)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="17" cy="17" r="2" fill="#b7e4c7"/>
+      </svg>
+      <div>
+        <div class="nav-title">Reforma Pedro Antonio 28</div>
+      </div>
     </div>
     <button class="share-btn" onclick="openShareModal()">Compartir</button>
   </div>
@@ -700,6 +715,7 @@ select.estado-select:focus, select.pago-select:focus {
     <div class="card">
       <div class="card-title">Leyenda</div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;">
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-org"></span> Organizacion</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-elec"></span> Electricidad/Fontaneria</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-alb"></span> Albanileria</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-bano"></span> Banos</span>
@@ -814,6 +830,7 @@ const DEFAULT_DATA = {
   ],
   materiales: [],
   ganttTasks: [
+    {id:18,name:"Organizacion de la reforma y planos",presupId:null,weeks:[-1,0,1],color:"color-org",phase:0},
     {id:1,name:"1-Electricidad (rozas, cableado)",presupId:1,weeks:[1,2,3],color:"color-elec",phase:1},
     {id:2,name:"2-Fontaneria (retirada + tubos nuevos)",presupId:2,weeks:[1,2,3],color:"color-font",phase:1},
     {id:3,name:"4-Retirar puertas",presupId:4,weeks:[1,2],color:"color-alb",phase:1},
@@ -1175,22 +1192,34 @@ function renderGantt() {
   // Calculate weeks dynamically from first payment date
   const inicio = getFechaInicio();
   // Start from the Monday of the week of the first payment
-  const startDate = new Date(inicio);
-  const dayOfWeek = startDate.getDay();
+  const baseDate = new Date(inicio);
+  const dayOfWeek = baseDate.getDay();
   const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-  startDate.setDate(startDate.getDate() + diffToMonday);
+  baseDate.setDate(baseDate.getDate() + diffToMonday);
 
-  const numWeeks = getNumSemanas();
+  // Find min week across all tasks (to support negative weeks like Fase 0)
+  const allWeeks = data.ganttTasks.flatMap(t => t.weeks);
+  const minWeek = Math.min(...allWeeks, 1);
+  const preWeeks = minWeek < 1 ? 1 - minWeek : 0;
+
+  // Start earlier to accommodate pre-weeks
+  const startDate = new Date(baseDate);
+  startDate.setDate(startDate.getDate() - preWeeks * 7);
+
+  const numWeeks = getNumSemanas() + preWeeks;
   const weekDates = [];
   const weekStarts = [];
+  const weekNumbers = []; // maps index to week number (can be negative)
   for (let i = 0; i < numWeeks; i++) {
     const d = new Date(startDate);
     d.setDate(d.getDate() + i * 7);
     weekStarts.push(d);
     weekDates.push(fmtDateShort(d));
+    weekNumbers.push(minWeek + i);
   }
 
   const phases = [
+    {name:"FASE 0: ORGANIZACION Y PLANOS", phase:0},
     {name:"FASE 1: DEMOLICION Y OBRA GRUESA", phase:1},
     {name:"FASE 2: ALBANILERIA Y BANOS", phase:2},
     {name:"FASE 3: VENTANAS, COCINA Y CARPINTERIA", phase:3},
@@ -1206,8 +1235,11 @@ function renderGantt() {
   }
 
   let html = '<thead><tr><th style="min-width:30px">#</th><th style="min-width:200px">Tarea</th>';
-  for (let w = 1; w <= numWeeks; w++) {
-    html += `<th class="gantt-week-header ${w===currentWeek?'gantt-current-week':''}">S${w}<br><span class="gantt-date-header">${weekDates[w-1]}</span></th>`;
+  for (let i = 0; i < numWeeks; i++) {
+    const wn = weekNumbers[i];
+    const label = wn <= 0 ? 'P' + (1 - wn) : 'S' + wn;
+    const isCur = (i+1) === currentWeek;
+    html += `<th class="gantt-week-header ${isCur?'gantt-current-week':''}" style="${wn<=0?'background:#f0f7f2':''}">${label}<br><span class="gantt-date-header">${weekDates[i]}</span></th>`;
   }
   html += '<th>Estado</th></tr></thead><tbody>';
 
@@ -1217,11 +1249,12 @@ function renderGantt() {
     const tasks = data.ganttTasks.filter(t => t.phase === phase.phase);
     for (const task of tasks) {
       const presupItem = data.presupuesto.find(p => p.id === task.presupId);
-      const estado = presupItem ? presupItem.estado : 'Sin empezar';
+      const estado = presupItem ? presupItem.estado : (task.presupId === null ? 'En curso' : 'Sin empezar');
       html += `<tr><td>${taskNum}</td><td style="font-size:11px">${task.name}</td>`;
-      for (let w = 1; w <= numWeeks; w++) {
-        const hasBar = task.weeks.includes(w);
-        const isCurrent = w === currentWeek;
+      for (let i = 0; i < numWeeks; i++) {
+        const wn = weekNumbers[i];
+        const hasBar = task.weeks.includes(wn);
+        const isCurrent = (i+1) === currentWeek;
         if (hasBar) {
           const pattern = estado === 'Terminado' ? 'background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,0.3) 3px,rgba(255,255,255,0.3) 6px);' : '';
           const opacity = estado === 'Terminado' ? '0.5' : '1';
