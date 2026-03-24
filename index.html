@@ -691,7 +691,7 @@ select.estado-select:focus, select.pago-select:focus {
     </div>
     <div class="dash-grid-2col" style="display:grid;gap:10px;margin-bottom:10px">
       <div class="card" style="padding:10px">
-        <div class="card-title" style="font-size:13px;margin-bottom:6px">Pagos por Categoria</div>
+        <div class="card-title" style="font-size:13px;margin-bottom:6px">Pagos por Categoría</div>
         <div id="dashFinancial"></div>
       </div>
       <div class="card" style="padding:10px">
@@ -716,7 +716,7 @@ select.estado-select:focus, select.pago-select:focus {
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <div class="card-title" style="margin-bottom:0">Detalle del Presupuesto</div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-primary btn-sm" onclick="addPresupuesto()">+ Anadir partida</button>
+          <button class="btn btn-primary btn-sm" onclick="addPresupuesto()">+ Añadir partida</button>
         </div>
       </div>
       <div class="table-wrapper">
@@ -724,11 +724,11 @@ select.estado-select:focus, select.pago-select:focus {
           <thead>
             <tr>
               <th>#</th>
-              <th>Categoria</th>
+              <th>Categoría</th>
               <th>Concepto</th>
               <th>Coste</th>
               <th>Mat/MO</th>
-              <th>A quien</th>
+              <th>A quién</th>
               <th>Estado</th>
               <th>Pagado</th>
               <th>Comentario</th>
@@ -752,19 +752,19 @@ select.estado-select:focus, select.pago-select:focus {
     <div class="card">
       <div class="card-title">Leyenda</div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;">
-        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-org"></span> Organizacion</span>
-        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-elec"></span> Electricidad/Fontaneria</span>
-        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-alb"></span> Albanileria</span>
-        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-bano"></span> Banos</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-org"></span> Organización</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-elec"></span> Electricidad/Fontanería</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-alb"></span> Albañilería</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-bano"></span> Baños</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-suelo"></span> Suelos</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-vent"></span> Ventanas</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-pint"></span> Pintura/Cocina</span>
-        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-carp"></span> Carpinteria</span>
+        <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-carp"></span> Carpintería</span>
         <span><span style="display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle" class="color-remate"></span> Remates</span>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:8px">
         <span>Barras rayadas = Terminado</span>
-        <span>Barras solidas = En curso o Sin empezar</span>
+        <span>Barras sólidas = En curso o Sin empezar</span>
       </div>
     </div>
   </div>
@@ -776,7 +776,7 @@ select.estado-select:focus, select.pago-select:focus {
     <!-- Category 1: Efectivo a Jose Antonio -->
     <div class="card">
       <div class="card-title">Efectivo a Jose Antonio</div>
-      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Haz clic en el circulo para marcar un pago como realizado</p>
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Haz clic en el círculo para marcar un pago como realizado</p>
       <div id="pagosList"></div>
     </div>
 
@@ -786,11 +786,11 @@ select.estado-select:focus, select.pago-select:focus {
       <div id="matJASection"></div>
     </div>
 
-    <!-- Category 3: Mobiliario, Electrodomesticos y Mis Compras -->
+    <!-- Category 3: Mobiliario, Electrodomésticos y Mis Compras -->
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="card-title" style="margin-bottom:0">Mobiliario, Electrodomesticos y Mis Compras</div>
-        <button class="btn btn-primary btn-sm" onclick="addMisCompra()">+ Anadir compra</button>
+        <div class="card-title" style="margin-bottom:0">Mobiliario, Electrodomésticos y Mis Compras</div>
+        <button class="btn btn-primary btn-sm" onclick="addMisCompra()">+ Añadir compra</button>
       </div>
       <div id="misComprasSection"></div>
     </div>
@@ -812,34 +812,34 @@ const STORAGE_KEY = 'reforma_pa28_v4';
 
 const DEFAULT_DATA = {
   presupuesto: [
-    {id:1,cat:"Electricidad",concepto:"Colocacion de cuadro de fusibles nuevos y realizacion de rozas para colocacion de cableado, interruptores y enchufes nuevos en toda la vivienda con conmutacion en las 4 habitaciones",coste:3600,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:2,cat:"Fontaneria",concepto:"Retirada de toda la fontaneria vieja en toda la vivienda desde el contador y colocacion de tubos nuevos multicapa de 18 en los tres banos y cocina",coste:3500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:4,cat:"Albanileria",concepto:"Retirar todas las puertas",coste:420,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:5,cat:"Albanileria",concepto:"Realizar tabique, habitacion 2",coste:1900,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:6,cat:"Albanileria",concepto:"Picado de todos los azulejos asi como el raseado de la cocina para la colocacion de ceramica. SIN ALICATAR",coste:1700,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Sin alicatar seria 1.700 eur"},
-    {id:7,cat:"Aire Acondicionado",concepto:"Colocacion de aire acondicionado en las 4 habitaciones",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Se anula si se mete calefaccion (ver linea 19)"},
-    {id:8,cat:"Ventanas",concepto:"Colocacion de ventanas en 4 habitaciones, ventana pequena en bano y puerta acristalada en terraza",coste:3200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:1,cat:"Electricidad",concepto:"Colocación de cuadro de fusibles nuevos y realización de rozas para colocación de cableado, interruptores y enchufes nuevos en toda la vivienda con conmutación en las 4 habitaciones",coste:3600,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:2,cat:"Fontanería",concepto:"Retirada de toda la fontanería vieja en toda la vivienda desde el contador y colocación de tubos nuevos multicapa de 18 en los tres baños y cocina",coste:3500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:4,cat:"Albañilería",concepto:"Retirar todas las puertas",coste:420,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:5,cat:"Albañilería",concepto:"Realizar tabique, habitación 2",coste:1900,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:6,cat:"Albañilería",concepto:"Picado de todos los azulejos así como el raseado de la cocina para la colocación de cerámica. SIN ALICATAR",coste:1700,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Sin alicatar sería 1.700 eur"},
+    {id:7,cat:"Aire Acondicionado",concepto:"Colocación de aire acondicionado en las 4 habitaciones",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Se anula si se mete calefacción (ver línea 19)"},
+    {id:8,cat:"Ventanas",concepto:"Colocación de ventanas en 4 habitaciones, ventana pequeña en baño y puerta acristalada en terraza",coste:3200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:9,cat:"Pintura",concepto:"Alisar y pintar el piso",coste:3550,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:10,cat:"Terraza",concepto:"Arreglos en terraza",coste:350,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:11,cat:"Cocina",concepto:"Montaje de cocina, solamente mano de obra",coste:950,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:12,cat:"Banos",concepto:"Bano principal: Picado de todos los azulejos, realizacion de tabique para 2 banos, alicatado, enlechado, colocacion de 2 mamparas nueva y dos platos de ducha. NO incluido 2 grifos de ducha, 2 armarios-lavabo-espejo ni las 2 tazas",coste:7250,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: 2 grifos ducha, 2 armarios-lavabo-espejo, 2 tazas"},
-    {id:13,cat:"Banos",concepto:"Bano habitacion 4: Realizacion de tabique de pladur, alicatado de azulejos, poner plato de ducha y mampara. No incluido grifo ducha, lavabo-espejo, ni taza",coste:4500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: grifo ducha, lavabo-espejo, taza"},
-    {id:14,cat:"Suelos",concepto:"Colocacion de ceramica porcelanico no superior a 15 euros m2 en todo el piso incluido rodapie de madera",coste:4200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:15,cat:"Carpinteria",concepto:"Colocacion de armarios, camas y lamparas. Precios iguales a los de Borja 9",coste:1400,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:16,cat:"Carpinteria",concepto:"Colocacion de puertas nuevas. 290 eur mano de obra y material por unidad (x8)",coste:2320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"8 uds x 290 eur"},
-    {id:17,cat:"Carpinteria",concepto:"Poner manillas y cerraduras en 4 habitaciones",coste:320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:18,cat:"Carpinteria",concepto:"Poner manillas en 3 banos",coste:70,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:19,cat:"Calefaccion",concepto:"Si se mete calefaccion, se anula la partida 7 de 4.500 eur pero se incrementa la fontaneria en 1.000 eur aprovechando los radiadores nuevos y caldera",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Condicional: anula linea 7 (-4.500) + fontaneria (+1.000)"},
+    {id:12,cat:"Baños",concepto:"Baño principal: Picado de todos los azulejos, realización de tabique para 2 baños, alicatado, enlechado, colocación de 2 mamparas nueva y dos platos de ducha. NO incluido 2 grifos de ducha, 2 armarios-lavabo-espejo ni las 2 tazas",coste:7250,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: 2 grifos ducha, 2 armarios-lavabo-espejo, 2 tazas"},
+    {id:13,cat:"Baños",concepto:"Baño habitación 4: Realización de tabique de pladur, alicatado de azulejos, poner plato de ducha y mampara. No incluido grifo ducha, lavabo-espejo, ni taza",coste:4500,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Faltan: grifo ducha, lavabo-espejo, taza"},
+    {id:14,cat:"Suelos",concepto:"Colocación de cerámica porcelánico no superior a 15 euros m2 en todo el piso incluido rodapié de madera",coste:4200,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:15,cat:"Carpintería",concepto:"Colocación de armarios, camas y lámparas. Precios iguales a los de Borja 9",coste:1400,tipo:"MO",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:16,cat:"Carpintería",concepto:"Colocación de puertas nuevas. 290 eur mano de obra y material por unidad (x8)",coste:2320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"8 uds x 290 eur"},
+    {id:17,cat:"Carpintería",concepto:"Poner manillas y cerraduras en 4 habitaciones",coste:320,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:18,cat:"Carpintería",concepto:"Poner manillas en 3 baños",coste:70,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:19,cat:"Calefacción",concepto:"Si se mete calefacción, se anula la partida 7 de 4.500 eur pero se incrementa la fontanería en 1.000 eur aprovechando los radiadores nuevos y caldera",coste:0,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:"Condicional: anula línea 7 (-4.500) + fontanería (+1.000)"},
     {id:20,cat:"Aire Acondicionado",concepto:"Aire acondicionado por mi cuenta (800 eur x 4 uds)",coste:3200,tipo:"MO+Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:21,cat:"Mobiliario",concepto:"Mobiliario habitaciones IKEA",coste:2742.35,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:22,cat:"Mobiliario",concepto:"Mobiliario habitaciones Regalos Miguel",coste:324.54,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:23,cat:"Cocina muebles",concepto:"Mobiliario Cocina Bricodepot (sin campanas, ni encimera ni dos puertas que faltaban y un mueble cajonero)",coste:1980,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:24,cat:"Cocina muebles",concepto:"Encimera Leroy (190 eur x 3 uds)",coste:570,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:25,cat:"Electrodomesticos",concepto:"Electrodomesticos Electrodepot (todo menos las campanas)",coste:2179.67,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:25,cat:"Electrodomésticos",concepto:"Electrodomésticos Electrodepot (todo menos las campanas)",coste:2179.67,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:26,cat:"Cocina muebles",concepto:"Cajonera cocina y varios",coste:294.75,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:27,cat:"Banos",concepto:"Griferia, lavabos, espejos compra Obramat",coste:1148.15,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
+    {id:27,cat:"Baños",concepto:"Grifería, lavabos, espejos compra Obramat",coste:1148.15,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
     {id:29,cat:"Varios",concepto:"Poyaques",coste:1500,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
-    {id:30,cat:"Cocina muebles",concepto:"Minicocinitas habitacion 1 y 4",coste:1200,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""}
+    {id:30,cat:"Cocina muebles",concepto:"Minicocinitas habitación 1 y 4",coste:1200,tipo:"Mat",quien:"Comprar y pagar yo",estado:"Sin empezar",pagado:"Sin pagar",comentario:""}
   ],
   materialesPresupuesto: 6190,
   jaMaterialesIncluidos: 6030,
@@ -855,24 +855,24 @@ const DEFAULT_DATA = {
   materiales: [],
   materialesJA: [],
   ganttTasks: [
-    {id:18,name:"Organizacion de la reforma y planos",presupId:null,weeks:[-1,0,1],color:"color-org",phase:0},
+    {id:18,name:"Organización de la reforma y planos",presupId:null,weeks:[-1,0,1],color:"color-org",phase:0},
     {id:1,name:"1-Electricidad (rozas, cableado)",presupId:1,weeks:[1,2,3],color:"color-elec",phase:1},
-    {id:2,name:"2-Fontaneria (retirada + tubos nuevos)",presupId:2,weeks:[1,2,3],color:"color-font",phase:1},
+    {id:2,name:"2-Fontanería (retirada + tubos nuevos)",presupId:2,weeks:[1,2,3],color:"color-font",phase:1},
     {id:3,name:"4-Retirar puertas",presupId:4,weeks:[1,2],color:"color-alb",phase:1},
-    {id:4,name:"5-Tabique habitacion 2",presupId:5,weeks:[2,3],color:"color-alb",phase:1},
+    {id:4,name:"5-Tabique habitación 2",presupId:5,weeks:[2,3],color:"color-alb",phase:1},
     {id:5,name:"6-Picado azulejos + raseado cocina",presupId:6,weeks:[2,3,4],color:"color-alb",phase:1},
-    {id:6,name:"12-Bano principal (tabique, alicatado, mamparas)",presupId:12,weeks:[4,5,6,7],color:"color-bano",phase:2},
-    {id:7,name:"13-Bano hab 4 (pladur, alicatado, mampara)",presupId:13,weeks:[5,6,7],color:"color-bano",phase:2},
-    {id:8,name:"14-Suelos ceramica + rodapie",presupId:14,weeks:[6,7,8,9],color:"color-suelo",phase:2},
-    {id:9,name:"8-Ventanas (4 hab + bano + terraza)",presupId:8,weeks:[8,9],color:"color-vent",phase:3},
+    {id:6,name:"12-Baño principal (tabique, alicatado, mamparas)",presupId:12,weeks:[4,5,6,7],color:"color-bano",phase:2},
+    {id:7,name:"13-Baño hab 4 (pladur, alicatado, mampara)",presupId:13,weeks:[5,6,7],color:"color-bano",phase:2},
+    {id:8,name:"14-Suelos cerámica + rodapié",presupId:14,weeks:[6,7,8,9],color:"color-suelo",phase:2},
+    {id:9,name:"8-Ventanas (4 hab + baño + terraza)",presupId:8,weeks:[8,9],color:"color-vent",phase:3},
     {id:10,name:"11-Montaje cocina",presupId:11,weeks:[9,10],color:"color-pint",phase:3},
     {id:11,name:"16-Puertas nuevas (8 uds)",presupId:16,weeks:[9,10],color:"color-carp",phase:3},
-    {id:12,name:"15-Colocacion armarios, camas, lamparas",presupId:15,weeks:[10,11],color:"color-carp",phase:3},
-    {id:13,name:"17/18-Manillas hab + banos",presupId:17,weeks:[10,11],color:"color-carp",phase:3},
+    {id:12,name:"15-Colocación armarios, camas, lámparas",presupId:15,weeks:[10,11],color:"color-carp",phase:3},
+    {id:13,name:"17/18-Manillas hab + baños",presupId:17,weeks:[10,11],color:"color-carp",phase:3},
     {id:14,name:"9-Alisar y pintar todo el piso",presupId:9,weeks:[11,12,13],color:"color-pint",phase:4},
     {id:15,name:"10-Arreglos terraza",presupId:10,weeks:[12,13],color:"color-pint",phase:4},
     {id:16,name:"Remates, limpieza, poyaques",presupId:29,weeks:[13,14],color:"color-remate",phase:5},
-    {id:17,name:"Entrega final + ultimo pago",presupId:null,weeks:[14],color:"color-remate",phase:5}
+    {id:17,name:"Entrega final + último pago",presupId:null,weeks:[14],color:"color-remate",phase:5}
   ],
   nextId: 30
 };
@@ -997,7 +997,7 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
 }
 function catClass(cat) {
-  const map = {'Electricidad':'electricidad','Fontaneria':'fontaneria','Albanileria':'albanileria','Ventanas':'ventanas','Pintura':'pintura','Terraza':'terraza','Cocina':'cocina','Cocina muebles':'cocina','Banos':'banos','Bano':'banos','Suelos':'suelos','Carpinteria':'carpinteria','Calefaccion':'calefaccion','Aire Acondicionado':'aire','Mobiliario':'mobiliario','Electrodomesticos':'electrodomesticos','Varios':'varios'};
+  const map = {'Electricidad':'electricidad','Fontanería':'fontaneria','Albañilería':'albanileria','Ventanas':'ventanas','Pintura':'pintura','Terraza':'terraza','Cocina':'cocina','Cocina muebles':'cocina','Baños':'banos','Baño':'banos','Suelos':'suelos','Carpintería':'carpinteria','Calefacción':'calefaccion','Aire Acondicionado':'aire','Mobiliario':'mobiliario','Electrodomésticos':'electrodomesticos','Varios':'varios'};
   return 'cat-' + (map[cat] || 'varios');
 }
 function estadoBadge(e) {
@@ -1100,9 +1100,9 @@ function renderDashboard() {
 
   // Phase progress (by Gantt phases)
   const phases = [
-    {name:"Fase 0: Organizacion", phase:0},
-    {name:"Fase 1: Demolicion", phase:1},
-    {name:"Fase 2: Albanileria", phase:2},
+    {name:"Fase 0: Organización", phase:0},
+    {name:"Fase 1: Demolición", phase:1},
+    {name:"Fase 2: Albañilería", phase:2},
     {name:"Fase 3: Instalaciones", phase:3},
     {name:"Fase 4: Acabados", phase:4},
     {name:"Fase 5: Remates", phase:5}
@@ -1239,7 +1239,7 @@ function renderDashboard() {
         <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Obra</span><span>${pctObra}%</span></div>
         <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:#52b788;border-radius:3px"></div></div>
       </div>
-      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:13px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">Quedan ${diasRestantes} dias</div>
+      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:13px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">Quedan ${diasRestantes} días</div>
     </div>
   `;
 
@@ -1247,7 +1247,7 @@ function renderDashboard() {
   const allTasks = data.presupuesto;
   // Also add gantt-only tasks
   const ganttOnlyTasks = data.ganttTasks.filter(t => t.presupId === null).map(t => ({
-    cat: 'Organizacion', concepto: t.name, coste: 0, estado: getTaskEstado(t), pagado: '-', isGanttOnly: true
+    cat: 'Organización', concepto: t.name, coste: 0, estado: getTaskEstado(t), pagado: '-', isGanttOnly: true
   }));
   const combined = [...ganttOnlyTasks, ...allTasks];
   document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11px"><thead><tr><th style="padding:4px 6px">#</th><th style="padding:4px 6px">Cat.</th><th style="padding:4px 6px">Concepto</th><th style="padding:4px 6px">Coste</th><th style="padding:4px 6px">Estado</th></tr></thead><tbody>
@@ -1326,23 +1326,23 @@ function editPresupField(idx, field) {
 function addPresupuesto() {
   const modal = document.getElementById('modalContent');
   modal.innerHTML = `
-    <h3>Anadir Nueva Partida</h3>
-    <div class="modal-field"><label>Categoria</label>
+    <h3>Añadir Nueva Partida</h3>
+    <div class="modal-field"><label>Categoría</label>
       <select id="pCat">
-        <option>Electricidad</option><option>Fontaneria</option><option>Albanileria</option>
+        <option>Electricidad</option><option>Fontanería</option><option>Albañilería</option>
         <option>Ventanas</option><option>Pintura</option><option>Terraza</option>
-        <option>Cocina</option><option>Cocina muebles</option><option>Banos</option>
-        <option>Suelos</option><option>Carpinteria</option><option>Calefaccion</option>
-        <option>Aire Acondicionado</option><option>Mobiliario</option><option>Electrodomesticos</option>
+        <option>Cocina</option><option>Cocina muebles</option><option>Baños</option>
+        <option>Suelos</option><option>Carpintería</option><option>Calefacción</option>
+        <option>Aire Acondicionado</option><option>Mobiliario</option><option>Electrodomésticos</option>
         <option>Varios</option>
       </select>
     </div>
-    <div class="modal-field"><label>Concepto</label><textarea id="pConcepto" placeholder="Descripcion del trabajo..."></textarea></div>
+    <div class="modal-field"><label>Concepto</label><textarea id="pConcepto" placeholder="Descripción del trabajo..."></textarea></div>
     <div class="modal-field"><label>Coste (EUR)</label><input type="number" id="pCoste" step="0.01" placeholder="0.00"></div>
     <div class="modal-field"><label>Tipo</label>
       <select id="pTipo"><option>MO+Mat</option><option>MO</option><option>Mat</option></select>
     </div>
-    <div class="modal-field"><label>A quien pagar</label>
+    <div class="modal-field"><label>A quién pagar</label>
       <select id="pQuien"><option>Jose Antonio (cash)</option><option>Comprar y pagar yo</option></select>
     </div>
     <div class="modal-field"><label>Comentario (opcional)</label><input type="text" id="pComentario" placeholder="Notas..."></div>
@@ -1369,7 +1369,7 @@ function savePresupuesto() {
   if (!item.concepto) { showToast('Escribe un concepto'); return; }
   data.presupuesto.push(item);
   saveData(); closeModal(); renderAll();
-  showToast('Partida anadida');
+  showToast('Partida añadida');
 }
 
 function deletePresupuesto(idx) {
@@ -1415,10 +1415,10 @@ function renderGantt() {
   }
 
   const phases = [
-    {name:"FASE 0: ORGANIZACION Y PLANOS", phase:0},
-    {name:"FASE 1: DEMOLICION Y OBRA GRUESA", phase:1},
-    {name:"FASE 2: ALBANILERIA Y BANOS", phase:2},
-    {name:"FASE 3: VENTANAS, COCINA Y CARPINTERIA", phase:3},
+    {name:"FASE 0: ORGANIZACIÓN Y PLANOS", phase:0},
+    {name:"FASE 1: DEMOLICIÓN Y OBRA GRUESA", phase:1},
+    {name:"FASE 2: ALBAÑILERÍA Y BAÑOS", phase:2},
+    {name:"FASE 3: VENTANAS, COCINA Y CARPINTERÍA", phase:3},
     {name:"FASE 4: ACABADOS", phase:4},
     {name:"FASE 5: REMATES Y ENTREGA", phase:5}
   ];
@@ -1511,7 +1511,7 @@ function renderPagos() {
     ${data.pagos.map(p => `
       <div class="payment-item ${p.pagado ? 'paid' : ''}" onclick="togglePago(${p.id})">
         <div class="payment-info">
-          <div class="payment-num">Pago ${p.id} ${p.isLast ? '(ultimo - ajuste)' : ''}</div>
+          <div class="payment-num">Pago ${p.id} ${p.isLast ? '(último - ajuste)' : ''}</div>
           <div class="payment-date">${fmtDate(p.fecha)}</div>
         </div>
         <div class="payment-amount" style="color:${p.pagado ? 'var(--success)' : 'var(--text)'}">${fmt(p.importe)}</div>
@@ -1536,11 +1536,11 @@ function renderPagos() {
       </div>
     </div>
     <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-      <button class="btn btn-primary btn-sm" onclick="addMaterialJA()">+ Anadir compra</button>
+      <button class="btn btn-primary btn-sm" onclick="addMaterialJA()">+ Añadir compra</button>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Metodo</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Método</th><th></th></tr></thead>
         <tbody>${data.materialesJA.length === 0
           ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas.</td></tr>'
           : data.materialesJA.map((m, i) => {
@@ -1570,7 +1570,7 @@ function renderPagos() {
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Metodo</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Fecha</th><th>Tienda</th><th>Concepto</th><th>Importe</th><th>Acumulado</th><th>Restante</th><th>Método</th><th></th></tr></thead>
         <tbody>${data.materiales.length === 0
           ? '<tr><td colspan="9" style="text-align:center;color:var(--text-secondary);padding:30px">No hay compras registradas.</td></tr>'
           : data.materiales.map((m, i) => {
@@ -1644,7 +1644,7 @@ function renderCalendar() {
 // ============================================================
 function addMaterialJA() {
   document.getElementById('modalContent').innerHTML = `
-    <h3>Anadir Compra Material J.A.</h3>
+    <h3>Añadir Compra Material J.A.</h3>
     <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha"></div>
     <div class="modal-field"><label>Tienda</label>
       <select id="matTienda"><option value="">Seleccionar...</option>
@@ -1652,9 +1652,9 @@ function addMaterialJA() {
         <option>Leroy Merlin</option><option>Electrodepot</option><option>Otra</option>
       </select>
     </div>
-    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripcion de la compra"></div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripción de la compra"></div>
     <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" placeholder="0.00"></div>
-    <div class="modal-field"><label>Metodo de pago</label>
+    <div class="modal-field"><label>Método de pago</label>
       <select id="matMetodo"><option>Transferencia</option><option>Tarjeta</option><option>Bizum</option><option>Efectivo</option></select>
     </div>
     <div class="modal-actions">
@@ -1687,7 +1687,7 @@ function deleteMaterialJA(idx) {
 
 function addMisCompra() {
   document.getElementById('modalContent').innerHTML = `
-    <h3>Anadir Compra</h3>
+    <h3>Añadir Compra</h3>
     <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha"></div>
     <div class="modal-field"><label>Tienda</label>
       <select id="matTienda"><option value="">Seleccionar...</option>
@@ -1695,9 +1695,9 @@ function addMisCompra() {
         <option>Leroy Merlin</option><option>Electrodepot</option><option>Otra</option>
       </select>
     </div>
-    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripcion de la compra"></div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" placeholder="Descripción de la compra"></div>
     <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" placeholder="0.00"></div>
-    <div class="modal-field"><label>Metodo de pago</label>
+    <div class="modal-field"><label>Método de pago</label>
       <select id="matMetodo"><option>Transferencia</option><option>Tarjeta</option><option>Bizum</option><option>Efectivo</option></select>
     </div>
     <div class="modal-actions">
@@ -1739,7 +1739,7 @@ function openShareModal() {
         <div class="share-icon" style="background:#e8f0fe;color:var(--primary)">📄</div>
         <div class="share-option-text">
           <div class="share-option-title">Generar archivo compartible</div>
-          <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales. Se lo puedes enviar por WhatsApp, email, etc. El lo abre en su movil o PC y ve todo.</div>
+          <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales. Se lo puedes enviar por WhatsApp, email, etc. Él lo abre en su móvil o PC y ve todo.</div>
         </div>
       </div>
       <div class="share-option" onclick="exportJSON()">
@@ -1823,7 +1823,7 @@ renderAll();`
   a.download = 'Reforma_Pedro_Antonio_28.html';
   a.click();
   URL.revokeObjectURL(url);
-  setTimeout(() => showToast('Archivo descargado. Enviale el archivo a tu reformista por WhatsApp o email.'), 500);
+  setTimeout(() => showToast('Archivo descargado. Envíale el archivo a tu reformista por WhatsApp o email.'), 500);
 }
 
 function exportJSON() {
@@ -1856,7 +1856,7 @@ function importJSON() {
           renderAll();
           showToast('Datos importados correctamente');
         } else {
-          showToast('Archivo no valido');
+          showToast('Archivo no válido');
         }
       } catch(e) {
         showToast('Error al leer el archivo');
