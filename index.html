@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Reforma Pedro Antonio 28</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
 :root {
   --primary: #2d6a4f;
@@ -657,6 +659,7 @@ select.estado-select:focus, select.pago-select:focus {
         <div style="font-size:9px;letter-spacing:2px;opacity:0.7;text-transform:uppercase;margin-top:1px">PREDI PROPERTIES</div>
       </div>
     </div>
+    <span id="syncStatus" style="font-size:11px;color:rgba(255,255,255,0.8);display:flex;align-items:center;margin-right:8px"></span>
     <button class="share-btn" onclick="openShareModal()">Compartir</button>
   </div>
   <div class="nav-subtitle" id="navSubtitle"></div>
@@ -810,6 +813,22 @@ select.estado-select:focus, select.pago-select:focus {
 // ============================================================
 const STORAGE_KEY = 'reforma_pa28_v4';
 
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDh6ZAFCQjvEBWzbGli1GfadjnbDhIBscA",
+  authDomain: "reforma-pa28.firebaseapp.com",
+  databaseURL: "https://reforma-pa28-default-rtdb.firebaseio.com",
+  projectId: "reforma-pa28",
+  storageBucket: "reforma-pa28.firebasestorage.app",
+  messagingSenderId: "52201027207",
+  appId: "1:52201027207:web:0d064ac82edd184be9ea22"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dataRef = db.ref('reforma_pa28');
+let firebaseConnected = false;
+let savingToFirebase = false;
+
 const DEFAULT_DATA = {
   presupuesto: [
     {id:1,cat:"Electricidad",concepto:"Colocación de cuadro de fusibles nuevos y realización de rozas para colocación de cableado, interruptores y enchufes nuevos en toda la vivienda con conmutación en las 4 habitaciones",coste:3600,tipo:"MO+Mat",quien:"Jose Antonio (cash)",estado:"Sin empezar",pagado:"Sin pagar",comentario:""},
@@ -899,6 +918,59 @@ function loadData() {
 
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // Sync to Firebase
+  savingToFirebase = true;
+  dataRef.set(data).then(() => {
+    savingToFirebase = false;
+    updateSyncStatus('synced');
+  }).catch(err => {
+    savingToFirebase = false;
+    updateSyncStatus('offline');
+  });
+  updateSyncStatus('syncing');
+}
+
+function migrateData(d) {
+  if (!d.ganttTasks) d.ganttTasks = DEFAULT_DATA.ganttTasks;
+  if (!d.materialesPresupuesto) d.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
+  if (!d.jaMaterialesIncluidos) d.jaMaterialesIncluidos = DEFAULT_DATA.jaMaterialesIncluidos;
+  if (!d.materialesJA) d.materialesJA = [];
+  if (!d.nextId) d.nextId = 30;
+  return d;
+}
+
+function initFirebase() {
+  dataRef.on('value', (snapshot) => {
+    if (savingToFirebase) return; // Ignore echo from our own save
+    const fbData = snapshot.val();
+    if (fbData) {
+      data = migrateData(fbData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      firebaseConnected = true;
+      updateSyncStatus('synced');
+      renderAll();
+    } else {
+      // DB is empty, seed it with current data
+      dataRef.set(data);
+    }
+  }, (err) => {
+    firebaseConnected = false;
+    updateSyncStatus('offline');
+  });
+
+  // Connection state
+  firebase.database().ref('.info/connected').on('value', (snap) => {
+    firebaseConnected = snap.val() === true;
+    updateSyncStatus(firebaseConnected ? 'synced' : 'offline');
+  });
+}
+
+function updateSyncStatus(status) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  const colors = { synced: '#52b788', syncing: '#e8a817', offline: '#ea4335' };
+  const labels = { synced: 'Sync', syncing: 'Sync...', offline: 'Offline' };
+  el.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+colors[status]+';margin-right:4px"></span>' + labels[status];
 }
 
 function showToast(msg) {
@@ -1906,6 +1978,7 @@ function renderAll() {
 // INIT
 loadData();
 renderAll();
+initFirebase(); // Connect to Firebase for real-time sync
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') { loadData(); renderAll(); }
