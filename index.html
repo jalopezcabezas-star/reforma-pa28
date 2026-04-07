@@ -902,12 +902,7 @@ function loadData() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      data = JSON.parse(saved);
-      if (!data.ganttTasks) data.ganttTasks = DEFAULT_DATA.ganttTasks;
-      if (!data.materialesPresupuesto) data.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
-      if (!data.jaMaterialesIncluidos) data.jaMaterialesIncluidos = DEFAULT_DATA.jaMaterialesIncluidos;
-      if (!data.materialesJA) data.materialesJA = [];
-      if (!data.nextId) data.nextId = 30;
+      data = migrateData(JSON.parse(saved));
     } else {
       data = JSON.parse(JSON.stringify(DEFAULT_DATA));
     }
@@ -930,8 +925,29 @@ function saveData() {
   updateSyncStatus('syncing');
 }
 
+// Firebase converts arrays to objects {0:..., 1:...} — convert back
+function toArray(v) {
+  if (Array.isArray(v)) return v;
+  if (v && typeof v === 'object' && !Array.isArray(v)) {
+    const keys = Object.keys(v);
+    if (keys.length === 0) return [];
+    // Check if keys are numeric
+    if (keys.every(k => !isNaN(k))) return Object.values(v);
+  }
+  return v || [];
+}
+
 function migrateData(d) {
-  if (!d.ganttTasks) d.ganttTasks = DEFAULT_DATA.ganttTasks;
+  // Fix Firebase object-to-array conversion
+  d.presupuesto = toArray(d.presupuesto);
+  d.pagos = toArray(d.pagos);
+  d.materiales = toArray(d.materiales);
+  d.ganttTasks = toArray(d.ganttTasks);
+  d.materialesJA = toArray(d.materialesJA);
+  // Fix nested arrays in ganttTasks (weeks)
+  d.ganttTasks.forEach(t => { if (t && t.weeks) t.weeks = toArray(t.weeks); });
+  // Defaults
+  if (!d.ganttTasks || d.ganttTasks.length === 0) d.ganttTasks = DEFAULT_DATA.ganttTasks;
   if (!d.materialesPresupuesto) d.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
   if (!d.jaMaterialesIncluidos) d.jaMaterialesIncluidos = DEFAULT_DATA.jaMaterialesIncluidos;
   if (!d.materialesJA) d.materialesJA = [];
