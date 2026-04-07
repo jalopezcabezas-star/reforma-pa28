@@ -1029,8 +1029,8 @@ function getCurrentWeekNum() {
 // Auto-calculate task status from Gantt weeks vs current week
 function getTaskEstado(ganttTask) {
   const curWeek = getCurrentWeekNum();
-  const weeks = ganttTask.weeks;
-  if (weeks.length === 0) return 'Sin empezar';
+  const weeks = toArray(ganttTask.weeks);
+  if (!weeks || weeks.length === 0) return 'Sin empezar';
   const minW = Math.min(...weeks);
   const maxW = Math.max(...weeks);
   if (curWeek > maxW) return 'Terminado';
@@ -1038,7 +1038,7 @@ function getTaskEstado(ganttTask) {
   return 'Sin empezar';
 }
 
-// Sync gantt-derived status to linked presupuesto items
+// Sync gantt-derived status to linked presupuesto items (no saveData here to avoid Firebase loop)
 function syncGanttToPresupuesto() {
   data.ganttTasks.forEach(t => {
     if (t.presupId !== null) {
@@ -1046,7 +1046,6 @@ function syncGanttToPresupuesto() {
       if (pi) pi.estado = getTaskEstado(t);
     }
   });
-  saveData();
 }
 
 function updateLastPayment() {
@@ -1557,6 +1556,8 @@ function renderGantt() {
 function toggleGanttWeek(taskId, weekNum) {
   const task = data.ganttTasks.find(t => t.id === taskId);
   if (!task) return;
+  // Ensure weeks is always an array (Firebase may convert it to object)
+  task.weeks = toArray(task.weeks);
   const idx = task.weeks.indexOf(weekNum);
   if (idx >= 0) {
     task.weeks.splice(idx, 1);
