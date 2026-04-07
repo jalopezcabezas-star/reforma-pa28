@@ -1821,27 +1821,34 @@ function deleteMaterial(idx) {
 // ============================================================
 function openShareModal() {
   document.getElementById('modalContent').innerHTML = `
-    <h3>Compartir con tu reformista</h3>
+    <h3>Compartir</h3>
     <div class="share-options">
+      <div class="share-option" onclick="shareLink()">
+        <div class="share-icon" style="background:#d8f3dc;color:var(--primary)">🔗</div>
+        <div class="share-option-text">
+          <div class="share-option-title">Compartir link</div>
+          <div class="share-option-desc">Copia el enlace para que cualquiera pueda ver y editar la reforma en tiempo real. Los cambios se sincronizan al instante.</div>
+        </div>
+      </div>
       <div class="share-option" onclick="shareFile()">
         <div class="share-icon" style="background:#e8f0fe;color:var(--primary)">📄</div>
         <div class="share-option-text">
           <div class="share-option-title">Generar archivo compartible</div>
-          <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales. Se lo puedes enviar por WhatsApp, email, etc. Él lo abre en su móvil o PC y ve todo.</div>
+          <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales para enviar por WhatsApp, email, etc.</div>
         </div>
       </div>
       <div class="share-option" onclick="exportJSON()">
         <div class="share-icon" style="background:#e6f4ea;color:var(--success)">💾</div>
         <div class="share-option-text">
           <div class="share-option-title">Exportar datos (backup)</div>
-          <div class="share-option-desc">Descarga un archivo JSON con todos los datos para backup o para importar en otro dispositivo.</div>
+          <div class="share-option-desc">Descarga un archivo JSON con todos los datos para backup.</div>
         </div>
       </div>
       <div class="share-option" onclick="importJSON()">
         <div class="share-icon" style="background:#fef7e0;color:var(--warning)">📥</div>
         <div class="share-option-text">
           <div class="share-option-title">Importar datos</div>
-          <div class="share-option-desc">Carga un archivo JSON exportado previamente para restaurar o sincronizar datos.</div>
+          <div class="share-option-desc">Carga un archivo JSON exportado previamente.</div>
         </div>
       </div>
     </div>
@@ -1850,6 +1857,21 @@ function openShareModal() {
     </div>
   `;
   document.getElementById('modalOverlay').classList.add('show');
+}
+
+function shareLink() {
+  const url = 'https://jalopezcabezas-star.github.io/reforma-pa28/';
+  if (navigator.share) {
+    navigator.share({ title: 'Reforma Pedro Antonio 28', text: 'Seguimiento de la reforma en tiempo real', url: url }).catch(() => {});
+    closeModal();
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      closeModal();
+      showToast('Link copiado al portapapeles');
+    });
+  } else {
+    prompt('Copia este link:', url);
+  }
 }
 
 function shareFile() {
