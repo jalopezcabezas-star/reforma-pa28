@@ -1684,6 +1684,10 @@ function toggleGanttWeek(taskId, weekNum) {
 // ============================================================
 function renderPagos() {
   updateLastPayment();
+  // Mantener compras de materiales ordenadas cronológicamente (fechas vacías al final).
+  const sortByFecha = (a, b) => (a.fecha || '9999-12-31').localeCompare(b.fecha || '9999-12-31');
+  data.materialesJA.sort(sortByFecha);
+  data.materiales.sort(sortByFecha);
   const totalReforma = getTotalReforma();
   const totalPagadoAll = getTotalPagadoAll();
   const totalPendienteAll = totalReforma - totalPagadoAll;
@@ -1745,7 +1749,7 @@ function renderPagos() {
           : data.materialesJA.map((m, i) => {
             matJAAcumulado += m.importe || 0;
             const rest = matJATotal - matJAAcumulado;
-            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(matJAAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td><button class="delete-row" onclick="deleteMaterialJA('+i+')">&times;</button></td></tr>';
+            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(matJAAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td style="white-space:nowrap"><button class="edit-row" onclick="editMaterialJA('+i+')">Editar</button><button class="delete-row" onclick="deleteMaterialJA('+i+')">&times;</button></td></tr>';
           }).join('')}
         </tbody>
       </table>
@@ -1775,7 +1779,7 @@ function renderPagos() {
           : data.materiales.map((m, i) => {
             misAcumulado += m.importe || 0;
             const rest = misComprasTotal - misAcumulado;
-            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(misAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td><button class="delete-row" onclick="deleteMaterial('+i+')">&times;</button></td></tr>';
+            return '<tr><td>'+(i+1)+'</td><td>'+fmtDate(m.fecha)+'</td><td>'+(m.tienda||'-')+'</td><td style="max-width:200px;font-size:12px">'+(m.concepto||'-')+'</td><td><strong>'+(m.importe?fmt(m.importe):'-')+'</strong></td><td>'+fmt(misAcumulado)+'</td><td style="color:'+(rest>=0?'var(--success)':'var(--danger)')+'">'+fmt(rest)+'</td><td style="font-size:11px">'+(m.metodo||'-')+'</td><td style="white-space:nowrap"><button class="edit-row" onclick="editMisCompra('+i+')">Editar</button><button class="delete-row" onclick="deleteMaterial('+i+')">&times;</button></td></tr>';
           }).join('')}
         </tbody>
       </table>
@@ -1908,6 +1912,44 @@ function deleteMaterialJA(idx) {
   }
 }
 
+function editMaterialJA(idx) {
+  const m = data.materialesJA[idx];
+  if (!m) return;
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Editar Compra Material J.A.</h3>
+    <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha" value="${m.fecha || ''}"></div>
+    <div class="modal-field"><label>Tienda</label>
+      <select id="matTienda">
+        ${['Obramat','Bricodepot','IKEA','Leroy Merlin','Electrodepot','Otra'].map(t => `<option ${m.tienda===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" value="${(m.concepto||'').replace(/"/g,'&quot;')}"></div>
+    <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" value="${m.importe ?? 0}"></div>
+    <div class="modal-field"><label>Método de pago</label>
+      <select id="matMetodo">
+        ${['Transferencia','Tarjeta','Bizum','Efectivo'].map(t => `<option ${m.metodo===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEditMaterialJA(${idx})">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveEditMaterialJA(idx) {
+  const m = data.materialesJA[idx];
+  if (!m) return;
+  m.fecha = document.getElementById('matFecha').value;
+  m.tienda = document.getElementById('matTienda').value;
+  m.concepto = document.getElementById('matConcepto').value;
+  m.importe = parseFloat(document.getElementById('matImporte').value) || 0;
+  m.metodo = document.getElementById('matMetodo').value;
+  saveData(); closeModal(); renderAll();
+  showToast('Compra material J.A. actualizada');
+}
+
 function addMisCompra() {
   document.getElementById('modalContent').innerHTML = `
     <h3>Añadir Compra</h3>
@@ -1949,6 +1991,44 @@ function deleteMaterial(idx) {
     saveData(); renderAll();
     showToast('Compra eliminada');
   }
+}
+
+function editMisCompra(idx) {
+  const m = data.materiales[idx];
+  if (!m) return;
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Editar Compra</h3>
+    <div class="modal-field"><label>Fecha</label><input type="date" id="matFecha" value="${m.fecha || ''}"></div>
+    <div class="modal-field"><label>Tienda</label>
+      <select id="matTienda">
+        ${['Obramat','Bricodepot','IKEA','Leroy Merlin','Electrodepot','Otra'].map(t => `<option ${m.tienda===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-field"><label>Concepto</label><input type="text" id="matConcepto" value="${(m.concepto||'').replace(/"/g,'&quot;')}"></div>
+    <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="matImporte" step="0.01" value="${m.importe ?? 0}"></div>
+    <div class="modal-field"><label>Método de pago</label>
+      <select id="matMetodo">
+        ${['Transferencia','Tarjeta','Bizum','Efectivo'].map(t => `<option ${m.metodo===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEditMisCompra(${idx})">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveEditMisCompra(idx) {
+  const m = data.materiales[idx];
+  if (!m) return;
+  m.fecha = document.getElementById('matFecha').value;
+  m.tienda = document.getElementById('matTienda').value;
+  m.concepto = document.getElementById('matConcepto').value;
+  m.importe = parseFloat(document.getElementById('matImporte').value) || 0;
+  m.metodo = document.getElementById('matMetodo').value;
+  saveData(); closeModal(); renderAll();
+  showToast('Compra actualizada');
 }
 
 // ============================================================
