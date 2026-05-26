@@ -8,99 +8,128 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
 :root {
-  --primary: #2d6a4f;
-  --primary-dark: #1b4332;
-  --primary-light: #40916c;
-  --primary-lighter: #52b788;
-  --success: #2d6a4f;
-  --warning: #e8a817;
-  --danger: #d93025;
-  --bg: #f1f5f2;
-  --card: #ffffff;
-  --text: #1b4332;
-  --text-secondary: #52796f;
-  --border: #d8e2dc;
-  --shadow: 0 1px 3px rgba(27,67,50,0.1), 0 1px 2px rgba(27,67,50,0.06);
-  --shadow-lg: 0 4px 12px rgba(27,67,50,0.12);
-  --radius: 12px;
-  --accent: #b7e4c7;
+  /* Claude palette */
+  --cream: #FAF9F5;
+  --cream-2: #F5F3EC;
+  --cream-3: #EFEDE4;
+  --ink: #1F1E1D;
+  --ink-2: #3D3C3A;
+  --ink-3: #6B6862;
+  --ink-4: #8F8B83;
+
+  /* Back-compat variable names (JS references them) */
+  --primary: #C96442;
+  --primary-dark: #A84E33;
+  --primary-light: #D97757;
+  --primary-lighter: #E6A288;
+  --success: #5F7F55;
+  --warning: #A67C1A;
+  --danger: #8F3A20;
+  --bg: #FAF9F5;
+  --card: #FFFFFF;
+  --text: #1F1E1D;
+  --text-secondary: #6B6862;
+  --border: #E8E4D9;
+  --shadow: 0 0 0 1px rgba(31,30,29,0.04);
+  --shadow-lg: 0 1px 2px rgba(31,30,29,0.04), 0 2px 8px rgba(31,30,29,0.05);
+  --radius: 10px;
+  --accent: #F1DBD2;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02', 'cv11';
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  letter-spacing: -0.01em;
+}
+
+.serif {
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, 'Times New Roman', serif;
+  letter-spacing: -0.015em;
 }
 
 /* NAV */
 .nav {
-  background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
-  color: white;
+  background: var(--cream);
+  color: var(--ink);
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: var(--shadow-lg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
 }
 .nav-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
+  padding: 14px 20px 10px;
+  gap: 12px;
 }
 .nav-title {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 .nav-subtitle {
-  padding: 0 16px 8px;
+  padding: 0 20px 10px;
   font-size: 11px;
-  opacity: 0.8;
+  color: var(--ink-3);
+  letter-spacing: 0.01em;
 }
 .nav-tabs {
   display: flex;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  padding: 0 12px;
+  gap: 2px;
 }
 .nav-tabs::-webkit-scrollbar { display: none; }
 .nav-tab {
   flex-shrink: 0;
-  padding: 10px 16px;
+  padding: 10px 14px;
   font-size: 13px;
   font-weight: 500;
+  color: var(--ink-3);
   cursor: pointer;
-  border-bottom: 3px solid transparent;
-  opacity: 0.7;
-  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
   white-space: nowrap;
+  letter-spacing: -0.005em;
 }
-.nav-tab:hover { opacity: 0.9; }
+.nav-tab:hover { color: var(--ink); }
 .nav-tab.active {
-  opacity: 1;
-  border-bottom-color: white;
+  color: var(--primary);
+  border-bottom-color: var(--primary);
 }
 .share-btn {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.35);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  color: var(--cream);
+  padding: 7px 14px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.15s, transform 0.05s;
   white-space: nowrap;
+  letter-spacing: -0.005em;
 }
-.share-btn:hover { background: rgba(255,255,255,0.25); }
+.share-btn:hover { background: #2F2E2C; }
+.share-btn:active { transform: scale(0.98); }
 
 /* CONTENT */
 .content {
-  padding: 16px;
-  max-width: 1400px;
+  padding: 24px 20px;
+  max-width: 1320px;
   margin: 0 auto;
 }
 .tab-content { display: none; }
@@ -109,50 +138,56 @@ body {
 /* CARDS */
 .card {
   background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
+  padding: 20px;
   margin-bottom: 16px;
 }
 .card-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--text);
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+  color: var(--ink);
 }
 
 /* STATS GRID */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
   margin-bottom: 16px;
 }
 .stat-card {
   background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  text-align: center;
+  padding: 18px 16px;
 }
 .stat-value {
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 4px;
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  color: var(--ink);
+  line-height: 1.1;
 }
 .stat-label {
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--ink-3);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
 }
 
 /* TABLES */
 .table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin: 0 -16px;
-  padding: 0 16px;
+  margin: 0 -20px;
+  padding: 0 20px;
 }
 table {
   width: 100%;
@@ -160,57 +195,62 @@ table {
   font-size: 13px;
 }
 th {
-  background: #f8f9fa;
+  background: transparent;
   padding: 10px 12px;
   text-align: left;
-  font-weight: 600;
-  font-size: 11px;
+  font-weight: 500;
+  font-size: 10.5px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  border-bottom: 2px solid var(--border);
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
   position: sticky;
   top: 0;
 }
 td {
-  padding: 10px 12px;
+  padding: 12px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  color: var(--ink-2);
 }
-tr:hover { background: #f8f9fa; }
+tr:hover { background: var(--cream-2); }
+tr:last-child td { border-bottom: none; }
 
 /* BADGES */
 .badge {
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 3px 9px;
+  border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
+  letter-spacing: -0.005em;
 }
-.badge-success { background: #d8f3dc; color: #1b4332; }
-.badge-warning { background: #fef7e0; color: #b06000; }
-.badge-danger { background: #fce8e6; color: #c5221f; }
-.badge-info { background: #d8f3dc; color: #2d6a4f; }
+.badge-success { background: #E6EFE0; color: #3F5A34; }
+.badge-warning { background: #F4EAD0; color: #7A5A14; }
+.badge-danger  { background: #F1DBD2; color: #8F3A20; }
+.badge-info    { background: #E4E6ED; color: #3D4A6B; }
 
 /* SELECT DROPDOWNS */
 select.estado-select, select.pago-select {
-  padding: 5px 8px;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
   border: 1px solid var(--border);
   font-size: 12px;
   font-weight: 500;
+  color: var(--ink-2);
   cursor: pointer;
-  background: white;
+  background: var(--cream);
   -webkit-appearance: none;
   appearance: none;
   min-width: 110px;
+  transition: border-color 0.15s;
 }
 select.estado-select:focus, select.pago-select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+  box-shadow: 0 0 0 3px rgba(201,100,66,0.12);
 }
 
 /* GANTT */
@@ -231,7 +271,7 @@ select.estado-select:focus, select.pago-select:focus {
   white-space: nowrap;
 }
 .gantt-bar {
-  height: 22px;
+  height: 20px;
   border-radius: 4px;
   min-width: 100%;
 }
@@ -241,28 +281,31 @@ select.estado-select:focus, select.pago-select:focus {
   -webkit-user-select: none;
 }
 .gantt-cell:hover {
-  background: rgba(45,106,79,0.12) !important;
+  background: rgba(201,100,66,0.08) !important;
 }
 .gantt-phase {
-  font-weight: 700;
-  font-size: 12px;
-  background: #f0f2f5;
-  color: var(--text);
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  background: var(--cream-2);
+  color: var(--ink);
 }
-.color-elec { background: #4285f4; }
-.color-font { background: #4285f4; }
-.color-alb { background: #ea4335; }
-.color-bano { background: #fbbc04; }
-.color-suelo { background: #34a853; }
-.color-vent { background: #ff6d01; }
-.color-pint { background: #46bdc6; }
-.color-carp { background: #7b1fa2; }
-.color-remate { background: #607d8b; }
-.color-org { background: #2d6a4f; }
+/* Harmonised earth-tone palette */
+.color-elec   { background: #7B8FA3; }
+.color-font   { background: #7B8FA3; }
+.color-alb    { background: #B06046; }
+.color-bano   { background: #C99B51; }
+.color-suelo  { background: #7F9472; }
+.color-vent   { background: #C96442; }
+.color-pint   { background: #6D9193; }
+.color-carp   { background: #8F6F87; }
+.color-remate { background: #7C7A72; }
+.color-org    { background: #4F4D46; }
 
-.gantt-week-header { font-size: 10px; font-weight: 600; }
-.gantt-date-header { font-size: 9px; color: var(--text-secondary); }
-.gantt-current-week { background: rgba(45,106,79,0.08); }
+.gantt-week-header { font-size: 10px; font-weight: 500; color: var(--ink-2); }
+.gantt-date-header { font-size: 9px; color: var(--ink-4); font-weight: 400; }
+.gantt-current-week { background: rgba(201,100,66,0.06); }
 
 /* CALENDAR */
 .calendar-grid {
@@ -272,15 +315,18 @@ select.estado-select:focus, select.pago-select:focus {
 }
 .month-card {
   background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
   padding: 16px;
 }
 .month-title {
-  font-weight: 700;
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-weight: 500;
   font-size: 15px;
+  letter-spacing: -0.01em;
   margin-bottom: 12px;
   text-align: center;
+  color: var(--ink);
 }
 .month-grid {
   display: grid;
@@ -290,10 +336,12 @@ select.estado-select:focus, select.pago-select:focus {
   font-size: 12px;
 }
 .day-header {
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-weight: 500;
+  color: var(--ink-4);
   padding: 6px 0;
   font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .day-cell {
   padding: 6px 2px;
@@ -304,68 +352,77 @@ select.estado-select:focus, select.pago-select:focus {
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  color: var(--ink-2);
 }
 .day-payment {
-  background: #d8f3dc;
-  color: var(--primary);
-  font-weight: 700;
+  background: var(--accent);
+  color: var(--primary-dark);
+  font-weight: 600;
   cursor: pointer;
 }
 .day-payment-done {
-  background: #b7e4c7;
-  color: #1b4332;
-  font-weight: 700;
+  background: #E6EFE0;
+  color: #3F5A34;
+  font-weight: 600;
 }
 .day-payment-last {
-  background: #fef7e0;
-  color: #b06000;
-  font-weight: 700;
+  background: #F4EAD0;
+  color: #7A5A14;
+  font-weight: 600;
 }
-.day-today { border: 2px solid var(--primary); }
+.day-today { border: 1.5px solid var(--primary); color: var(--primary); font-weight: 600; }
 
 /* PAYMENT LIST */
 .payment-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 12px;
+  padding: 14px 14px;
   border-bottom: 1px solid var(--border);
-  transition: background 0.2s;
+  transition: background 0.15s;
   cursor: pointer;
   border-radius: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
-.payment-item:hover { background: #f8f9fa; }
-.payment-item.paid { background: #f0f7f2; }
+.payment-item:hover { background: var(--cream-2); }
+.payment-item.paid { background: transparent; opacity: 0.65; }
 .payment-info { flex: 1; }
-.payment-num { font-weight: 700; font-size: 14px; }
-.payment-date { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-.payment-amount { font-weight: 800; font-size: 18px; margin-left: 12px; }
+.payment-num { font-weight: 500; font-size: 14px; color: var(--ink); letter-spacing: -0.01em; }
+.payment-date { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.payment-amount {
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  margin-left: 12px;
+  color: var(--ink);
+}
 
 .check-circle {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  border: 2px solid var(--border);
+  border: 1.5px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 12px;
-  transition: all 0.2s;
+  transition: all 0.15s;
   flex-shrink: 0;
   cursor: pointer;
+  background: var(--cream);
 }
-.check-circle:hover { border-color: var(--success); }
+.check-circle:hover { border-color: var(--primary); }
 .check-circle.checked {
-  background: #2d6a4f;
-  border-color: #2d6a4f;
+  background: var(--primary);
+  border-color: var(--primary);
 }
 .check-circle.checked::after {
   content: '';
-  width: 8px;
-  height: 14px;
-  border: solid white;
-  border-width: 0 2.5px 2.5px 0;
+  width: 7px;
+  height: 12px;
+  border: solid var(--cream);
+  border-width: 0 2px 2px 0;
   transform: rotate(45deg) translateY(-1px);
 }
 
@@ -394,13 +451,17 @@ select.estado-select:focus, select.pago-select:focus {
   text-align: center;
 }
 .progress-ring-pct {
-  font-size: 42px;
-  font-weight: 800;
-  color: var(--text);
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 .progress-ring-label {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /* PHASE PROGRESS */
@@ -414,62 +475,68 @@ select.estado-select:focus, select.pago-select:focus {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-bottom: 5px;
+  letter-spacing: -0.005em;
 }
 .progress-bar {
   width: 100%;
-  height: 10px;
-  background: #e8eaed;
-  border-radius: 5px;
+  height: 6px;
+  background: var(--cream-3);
+  border-radius: 999px;
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 999px;
   transition: width 0.6s ease;
 }
-.progress-fill-green { background: linear-gradient(90deg, #2d6a4f, #52b788); }
-.progress-fill-blue { background: linear-gradient(90deg, #1b4332, #40916c); }
-.progress-fill-orange { background: linear-gradient(90deg, #e8a817, #fbbc04); }
-.progress-fill-red { background: linear-gradient(90deg, #c5221f, #ea4335); }
-.progress-fill-purple { background: linear-gradient(90deg, #7b1fa2, #ab47bc); }
-.progress-fill-cyan { background: linear-gradient(90deg, #2d6a4f, #74c69d); }
+.progress-fill-green  { background: #6B8163; }
+.progress-fill-blue   { background: #7B8FA3; }
+.progress-fill-orange { background: #C99B51; }
+.progress-fill-red    { background: #C96442; }
+.progress-fill-purple { background: #8F6F87; }
+.progress-fill-cyan   { background: #6D9193; }
 
 /* BUTTONS */
 .btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  letter-spacing: -0.005em;
+  line-height: 1;
 }
-.btn-primary { background: linear-gradient(135deg, #2d6a4f, #40916c); color: white; }
-.btn-primary:hover { background: linear-gradient(135deg, #1b4332, #2d6a4f); }
-.btn-success { background: var(--success); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn-outline:hover { background: #f8f9fa; }
-.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-primary { background: var(--primary); color: var(--cream); }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: var(--cream); }
+.btn-danger  { background: var(--danger); color: var(--cream); }
+.btn-outline { background: transparent; border-color: var(--border); color: var(--ink-2); }
+.btn-outline:hover { background: var(--cream-2); border-color: var(--ink-4); color: var(--ink); }
+.btn-sm { padding: 6px 11px; font-size: 11.5px; }
 
 /* TOAST */
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: #323232;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 12px 20px;
+  border-radius: 999px;
   font-size: 13px;
+  font-weight: 500;
   z-index: 1000;
-  transition: transform 0.3s ease;
-  box-shadow: var(--shadow-lg);
+  transition: transform 0.25s ease;
+  box-shadow: 0 10px 30px rgba(31,30,29,0.15);
   max-width: 90%;
   text-align: center;
+  letter-spacing: -0.005em;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -478,7 +545,9 @@ select.estado-select:focus, select.pago-select:focus {
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(31,30,29,0.40);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   z-index: 200;
   align-items: center;
   justify-content: center;
@@ -486,23 +555,33 @@ select.estado-select:focus, select.pago-select:focus {
 }
 .modal-overlay.show { display: flex; }
 .modal {
-  background: white;
-  border-radius: var(--radius);
-  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 26px;
   max-width: 500px;
   width: 100%;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 50px rgba(31,30,29,0.18);
 }
-.modal h3 { margin-bottom: 16px; font-size: 18px; }
-.modal-field { margin-bottom: 12px; }
+.modal h3 {
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  font-size: 20px;
+  color: var(--ink);
+}
+.modal-field { margin-bottom: 14px; }
 .modal-field label {
   display: block;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 .modal-field input, .modal-field select, .modal-field textarea {
   width: 100%;
@@ -510,51 +589,63 @@ select.estado-select:focus, select.pago-select:focus {
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 14px;
+  color: var(--ink);
+  background: var(--cream);
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(201,100,66,0.12);
 }
 .modal-field textarea { min-height: 60px; resize: vertical; }
 .modal-actions {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 /* CATEGORY COLORS */
-.cat-electricidad { border-left: 4px solid #4285f4; }
-.cat-fontaneria { border-left: 4px solid #4285f4; }
-.cat-albanileria { border-left: 4px solid #ea4335; }
-.cat-ventanas { border-left: 4px solid #ff6d01; }
-.cat-pintura { border-left: 4px solid #46bdc6; }
-.cat-terraza { border-left: 4px solid #34a853; }
-.cat-cocina { border-left: 4px solid #46bdc6; }
-.cat-banos { border-left: 4px solid #fbbc04; }
-.cat-suelos { border-left: 4px solid #34a853; }
-.cat-carpinteria { border-left: 4px solid #7b1fa2; }
-.cat-calefaccion { border-left: 4px solid #ea4335; }
-.cat-aire { border-left: 4px solid #4285f4; }
-.cat-mobiliario { border-left: 4px solid #ff6d01; }
-.cat-electrodomesticos { border-left: 4px solid #607d8b; }
-.cat-varios { border-left: 4px solid #607d8b; }
+.cat-electricidad     { border-left: 3px solid #7B8FA3; }
+.cat-fontaneria       { border-left: 3px solid #7B8FA3; }
+.cat-albanileria      { border-left: 3px solid #B06046; }
+.cat-ventanas         { border-left: 3px solid #C96442; }
+.cat-pintura          { border-left: 3px solid #6D9193; }
+.cat-terraza          { border-left: 3px solid #7F9472; }
+.cat-cocina           { border-left: 3px solid #6D9193; }
+.cat-banos            { border-left: 3px solid #C99B51; }
+.cat-suelos           { border-left: 3px solid #7F9472; }
+.cat-carpinteria      { border-left: 3px solid #8F6F87; }
+.cat-calefaccion      { border-left: 3px solid #B06046; }
+.cat-aire             { border-left: 3px solid #7B8FA3; }
+.cat-mobiliario       { border-left: 3px solid #C96442; }
+.cat-electrodomesticos{ border-left: 3px solid #7C7A72; }
+.cat-varios           { border-left: 3px solid #7C7A72; }
 
 .editable {
   cursor: pointer;
   padding: 2px 4px;
   border-radius: 4px;
-  transition: background 0.2s;
+  transition: background 0.15s;
 }
-.editable:hover { background: #e8f0fe; }
+.editable:hover { background: var(--accent); }
 
 .fase-header td {
-  font-weight: 700;
-  background: #f0f2f5;
-  font-size: 12px;
-  padding: 8px 12px;
+  font-family: ui-serif, 'Tiempos Headline', 'Tiempos', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  background: var(--cream-2);
+  color: var(--ink);
+  font-size: 13px;
+  padding: 10px 12px;
 }
 
 /* SHARE MODAL */
 .share-options {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 .share-option {
   display: flex;
@@ -564,36 +655,37 @@ select.estado-select:focus, select.pago-select:focus {
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
+  background: var(--cream);
 }
-.share-option:hover { background: #f8f9fa; border-color: var(--primary); }
+.share-option:hover { background: var(--cream-2); border-color: var(--ink-4); }
 .share-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   flex-shrink: 0;
 }
 .share-option-text { font-size: 13px; }
-.share-option-title { font-weight: 700; margin-bottom: 2px; }
-.share-option-desc { color: var(--text-secondary); font-size: 11px; }
+.share-option-title { font-weight: 600; color: var(--ink); margin-bottom: 2px; letter-spacing: -0.005em; }
+.share-option-desc { color: var(--ink-3); font-size: 11.5px; }
 
 /* DELETE ROW BUTTON */
 .delete-row {
   background: none;
   border: none;
-  color: #c5221f;
+  color: var(--ink-4);
   cursor: pointer;
   font-size: 16px;
   padding: 4px 8px;
-  border-radius: 4px;
-  opacity: 0.5;
-  transition: opacity 0.2s;
+  border-radius: 6px;
+  opacity: 0.6;
+  transition: all 0.15s;
 }
-.delete-row:hover { opacity: 1; background: #fce8e6; }
+.delete-row:hover { opacity: 1; color: var(--danger); background: var(--accent); }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
@@ -642,24 +734,24 @@ select.estado-select:focus, select.pago-select:focus {
 
 <div class="nav">
   <div class="nav-top">
-    <div style="display:flex;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;gap:12px">
       <svg width="38" height="38" viewBox="0 0 38 38" fill="none" style="flex-shrink:0">
-        <rect width="38" height="38" rx="9" fill="rgba(255,255,255,0.12)"/>
-        <path d="M7 28V14l5-4h14l5 4v14H7z" fill="none" stroke="white" stroke-width="1.3" stroke-linejoin="round"/>
-        <path d="M7 14h24" stroke="white" stroke-width="1.3"/>
-        <rect x="11" y="17" width="5" height="5" rx="0.5" fill="none" stroke="#b7e4c7" stroke-width="1.2"/>
-        <rect x="22" y="17" width="5" height="5" rx="0.5" fill="none" stroke="#b7e4c7" stroke-width="1.2"/>
-        <rect x="15" y="22" width="8" height="6" rx="0.5" fill="none" stroke="white" stroke-width="1.2"/>
-        <line x1="19" y1="22" x2="19" y2="28" stroke="white" stroke-width="1"/>
-        <path d="M12 14V10l7-3 7 3v4" fill="none" stroke="#b7e4c7" stroke-width="1.2" stroke-linejoin="round"/>
-        <circle cx="19" cy="9" r="1.2" fill="#b7e4c7"/>
+        <rect width="38" height="38" rx="9" fill="#F1DBD2"/>
+        <path d="M7 28V14l5-4h14l5 4v14H7z" fill="none" stroke="#C96442" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M7 14h24" stroke="#C96442" stroke-width="1.3"/>
+        <rect x="11" y="17" width="5" height="5" rx="0.5" fill="none" stroke="#A84E33" stroke-width="1.2"/>
+        <rect x="22" y="17" width="5" height="5" rx="0.5" fill="none" stroke="#A84E33" stroke-width="1.2"/>
+        <rect x="15" y="22" width="8" height="6" rx="0.5" fill="none" stroke="#C96442" stroke-width="1.2"/>
+        <line x1="19" y1="22" x2="19" y2="28" stroke="#C96442" stroke-width="1"/>
+        <path d="M12 14V10l7-3 7 3v4" fill="none" stroke="#A84E33" stroke-width="1.2" stroke-linejoin="round"/>
+        <circle cx="19" cy="9" r="1.2" fill="#A84E33"/>
       </svg>
       <div>
         <div class="nav-title">Reforma Pedro Antonio 28</div>
-        <div style="font-size:9px;letter-spacing:2px;opacity:0.7;text-transform:uppercase;margin-top:1px">PREDI PROPERTIES</div>
+        <div style="font-size:9px;letter-spacing:2.5px;color:var(--ink-4);text-transform:uppercase;margin-top:3px;font-weight:500">PREDI PROPERTIES</div>
       </div>
     </div>
-    <span id="syncStatus" style="font-size:11px;color:rgba(255,255,255,0.8);display:flex;align-items:center;margin-right:8px"></span>
+    <span id="syncStatus" style="font-size:11px;color:var(--ink-3);display:flex;align-items:center;margin-right:8px"></span>
     <button class="share-btn" onclick="openShareModal()">Compartir</button>
   </div>
   <div class="nav-subtitle" id="navSubtitle"></div>
@@ -944,8 +1036,9 @@ function migrateData(d) {
   d.materiales = toArray(d.materiales);
   d.ganttTasks = toArray(d.ganttTasks);
   d.materialesJA = toArray(d.materialesJA);
-  // Fix nested arrays in ganttTasks (weeks)
-  d.ganttTasks.forEach(t => { if (t && t.weeks) t.weeks = toArray(t.weeks); });
+  // Fix nested arrays in ganttTasks (weeks). Firebase drops empty arrays,
+  // so a task with all weeks toggled off comes back without `weeks` at all.
+  d.ganttTasks.forEach(t => { if (t) t.weeks = toArray(t.weeks || []); });
   // Defaults
   if (!d.ganttTasks || d.ganttTasks.length === 0) d.ganttTasks = DEFAULT_DATA.ganttTasks;
   if (!d.materialesPresupuesto) d.materialesPresupuesto = DEFAULT_DATA.materialesPresupuesto;
@@ -984,7 +1077,7 @@ function initFirebase() {
 function updateSyncStatus(status) {
   const el = document.getElementById('syncStatus');
   if (!el) return;
-  const colors = { synced: '#52b788', syncing: '#e8a817', offline: '#ea4335' };
+  const colors = { synced: '#5F7F55', syncing: '#C99B51', offline: '#C96442' };
   const labels = { synced: 'Sync', syncing: 'Sync...', offline: 'Offline' };
   el.innerHTML = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+colors[status]+';margin-right:4px"></span>' + labels[status];
 }
@@ -1132,24 +1225,24 @@ function renderDashboard() {
   const dashTotalPendienteAll = getTotalReforma() - dashTotalPagadoAll;
   const dashPctPagado = getTotalReforma() > 0 ? Math.min(100, Math.round(dashTotalPagadoAll / getTotalReforma() * 100)) : 0;
   document.getElementById('dashStats').innerHTML = `
-    <div class="hero-pad" style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:16px;padding:20px 24px;box-shadow:0 4px 20px rgba(27,67,50,0.3);color:#fff">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px">
-        <div style="text-align:center;flex:1;min-width:90px">
-          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Total Reforma</div>
-          <div class="hero-total" style="font-size:24px;font-weight:800;margin-top:2px">${fmt(getTotalReforma())}</div>
+    <div class="hero-pad" style="background:#1F1E1D;border:1px solid #1F1E1D;border-radius:14px;padding:22px 24px;color:#FAF9F5">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:10.5px;color:rgba(250,249,245,0.55);text-transform:uppercase;letter-spacing:0.1em;font-weight:500">Total Reforma</div>
+          <div class="hero-total" style="font-family:ui-serif,'Tiempos Headline',Georgia,serif;font-size:30px;font-weight:500;letter-spacing:-0.02em;margin-top:4px">${fmt(getTotalReforma())}</div>
         </div>
-        <div style="text-align:center;flex:1;min-width:70px">
-          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pagado</div>
-          <div class="hero-sub" style="font-size:20px;font-weight:700;margin-top:2px;color:#b7e4c7">${fmt(dashTotalPagadoAll)}</div>
+        <div style="flex:1;min-width:90px">
+          <div style="font-size:10.5px;color:rgba(250,249,245,0.55);text-transform:uppercase;letter-spacing:0.1em;font-weight:500">Pagado</div>
+          <div class="hero-sub" style="font-family:ui-serif,'Tiempos Headline',Georgia,serif;font-size:22px;font-weight:500;margin-top:4px;color:#E6A288">${fmt(dashTotalPagadoAll)}</div>
         </div>
-        <div style="text-align:center;flex:1;min-width:70px">
-          <div style="font-size:10px;opacity:0.75;text-transform:uppercase;letter-spacing:1px">Pendiente</div>
-          <div class="hero-sub" style="font-size:20px;font-weight:700;margin-top:2px;color:#fca5a5">${fmt(dashTotalPendienteAll)}</div>
+        <div style="flex:1;min-width:90px">
+          <div style="font-size:10.5px;color:rgba(250,249,245,0.55);text-transform:uppercase;letter-spacing:0.1em;font-weight:500">Pendiente</div>
+          <div class="hero-sub" style="font-family:ui-serif,'Tiempos Headline',Georgia,serif;font-size:22px;font-weight:500;margin-top:4px;color:rgba(250,249,245,0.85)">${fmt(dashTotalPendienteAll)}</div>
         </div>
       </div>
-      <div class="hero-bar" style="position:relative;height:48px;background:rgba(255,255,255,0.2);border-radius:24px;overflow:hidden">
-        <div style="height:100%;width:${dashPctPagado}%;background:linear-gradient(90deg,#52b788,#b7e4c7);border-radius:24px;transition:width 0.8s ease"></div>
-        <div class="hero-bar-text" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3)">
+      <div class="hero-bar" style="position:relative;height:40px;background:rgba(250,249,245,0.08);border-radius:999px;overflow:hidden">
+        <div style="height:100%;width:${dashPctPagado}%;background:linear-gradient(90deg,#C96442,#E6A288);border-radius:999px;transition:width 0.8s ease"></div>
+        <div class="hero-bar-text" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#FAF9F5;letter-spacing:-0.005em">
           ${dashPctPagado}% pagado
         </div>
       </div>
@@ -1160,7 +1253,7 @@ function renderDashboard() {
   const r = 60;
   const circ = 2 * Math.PI * r;
   const offset = circ - (pctWeighted / 100) * circ;
-  const color = pctWeighted >= 75 ? '#0d904f' : pctWeighted >= 40 ? '#e8a817' : '#1a73e8';
+  const color = pctWeighted >= 75 ? '#5F7F55' : pctWeighted >= 40 ? '#C99B51' : '#C96442';
 
   const ringSize = 120;
   const svgR = 50;
@@ -1169,19 +1262,19 @@ function renderDashboard() {
   document.getElementById('dashRing').innerHTML = `
     <div style="position:relative;width:${ringSize}px;height:${ringSize}px;margin:0 auto">
       <svg viewBox="0 0 120 120" style="width:${ringSize}px;height:${ringSize}px;transform:rotate(-90deg)">
-        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="#e8eaed" stroke-width="10"/>
-        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="${color}" stroke-width="10"
+        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="#EFEDE4" stroke-width="8"/>
+        <circle cx="60" cy="60" r="${svgR}" fill="none" stroke="${color}" stroke-width="8"
           stroke-dasharray="${svgCirc}" stroke-dashoffset="${svgOffset}" stroke-linecap="round"
           style="transition: stroke-dashoffset 1s ease"/>
       </svg>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
-        <div style="font-size:24px;font-weight:800;color:${color}">${pctWeighted}%</div>
+        <div style="font-family:ui-serif,'Tiempos Headline',Georgia,serif;font-size:26px;font-weight:500;letter-spacing:-0.02em;color:${color}">${pctWeighted}%</div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;font-size:11px;justify-content:center;flex-wrap:wrap;margin-top:6px">
-      <div style="text-align:center"><strong style="color:#0d904f;font-size:16px">${totalTerminadasAll}</strong><br>Listas</div>
-      <div style="text-align:center"><strong style="color:#e8a817;font-size:16px">${totalEnCursoAll}</strong><br>En curso</div>
-      <div style="text-align:center"><strong style="color:#ea4335;font-size:16px">${totalSinEmpAll}</strong><br>Pendientes</div>
+    <div style="display:flex;gap:16px;font-size:11px;justify-content:center;flex-wrap:wrap;margin-top:10px;color:var(--ink-3)">
+      <div style="text-align:center"><strong style="font-family:ui-serif,Georgia,serif;color:#5F7F55;font-size:18px;font-weight:500;display:block;letter-spacing:-0.01em">${totalTerminadasAll}</strong>Listas</div>
+      <div style="text-align:center"><strong style="font-family:ui-serif,Georgia,serif;color:#C99B51;font-size:18px;font-weight:500;display:block;letter-spacing:-0.01em">${totalEnCursoAll}</strong>En curso</div>
+      <div style="text-align:center"><strong style="font-family:ui-serif,Georgia,serif;color:#C96442;font-size:18px;font-weight:500;display:block;letter-spacing:-0.01em">${totalSinEmpAll}</strong>Pendientes</div>
     </div>
   `;
 
@@ -1194,7 +1287,7 @@ function renderDashboard() {
     {name:"Fase 4: Acabados", phase:4},
     {name:"Fase 5: Remates", phase:5}
   ];
-  const phaseColors = ['#52b788','#2d6a4f','#40916c','#1a73e8','#e8a817','#d93025'];
+  const phaseColors = ['#7F9472','#4F4D46','#7B8FA3','#6D9193','#C99B51','#C96442'];
   document.getElementById('dashPhaseProgress').innerHTML = phases.map((ph, idx) => {
     const tasks = data.ganttTasks.filter(t => t.phase === ph.phase);
     if (tasks.length === 0) return '';
@@ -1205,9 +1298,9 @@ function renderDashboard() {
       if (st === 'En curso') curso++;
     });
     const pct = Math.round(((done + curso * 0.5) / tasks.length) * 100);
-    return `<div style="margin-bottom:6px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>${ph.name}</span><span><strong>${pct}%</strong></span></div>
-      <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:3px;transition:width 0.5s"></div></div>
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--ink-2)"><span>${ph.name}</span><span style="color:var(--ink-3);font-weight:500;font-variant-numeric:tabular-nums">${pct}%</span></div>
+      <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${phaseColors[idx]};border-radius:999px;transition:width 0.6s ease"></div></div>
     </div>`;
   }).join('');
 
@@ -1222,23 +1315,23 @@ function renderDashboard() {
   const dashMisGastado = getMisComprasGastado();
   const dashMisPct = dashMisCompras > 0 ? Math.min(100, Math.round(dashMisGastado / dashMisCompras * 100)) : 0;
   document.getElementById('dashFinancial').innerHTML = `
-    <div style="font-size:12px;">
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Efectivo J.A.</span><span>${fmt(dashJAPagado)} / ${fmt(dashJAPagar)}</span></div>
-        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
+    <div style="font-size:12px;color:var(--ink-2)">
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span>Efectivo J.A.</span><span style="color:var(--ink-3);font-variant-numeric:tabular-nums">${fmt(dashJAPagado)} / ${fmt(dashJAPagar)}</span></div>
+        <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${dashJAPct}%;background:var(--primary);border-radius:999px;transition:width 0.6s ease"></div></div>
       </div>
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Mat. J.A.</span><span>${fmt(dashMatJAGastado)} / ${fmt(dashMatJA)}</span></div>
-        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashMatJAPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span>Mat. J.A.</span><span style="color:var(--ink-3);font-variant-numeric:tabular-nums">${fmt(dashMatJAGastado)} / ${fmt(dashMatJA)}</span></div>
+        <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${dashMatJAPct}%;background:var(--primary);border-radius:999px;transition:width 0.6s ease"></div></div>
       </div>
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span>Mis compras</span><span>${fmt(dashMisGastado)} / ${fmt(dashMisCompras)}</span></div>
-        <div style="height:8px;background:#e8eaed;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dashMisPct}%;background:linear-gradient(90deg,#2d6a4f,#52b788);border-radius:4px"></div></div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span>Mis compras</span><span style="color:var(--ink-3);font-variant-numeric:tabular-nums">${fmt(dashMisGastado)} / ${fmt(dashMisCompras)}</span></div>
+        <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${dashMisPct}%;background:var(--primary);border-radius:999px;transition:width 0.6s ease"></div></div>
       </div>
-      <div style="border-top:1px solid var(--border);padding-top:6px;font-size:11px">
-        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Efectivo</span><strong style="color:var(--danger)">${fmt(dashJAPagar - dashJAPagado)}</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Mat. J.A.</span><strong style="color:var(--danger)">${fmt(dashMatJA - dashMatJAGastado)}</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:2px 0"><span>Pdte Mis compras</span><strong style="color:var(--danger)">${fmt(dashMisCompras - dashMisGastado)}</strong></div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;font-size:11.5px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--ink-3)"><span>Pendiente Efectivo</span><strong style="color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500">${fmt(dashJAPagar - dashJAPagado)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--ink-3)"><span>Pendiente Mat. J.A.</span><strong style="color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500">${fmt(dashMatJA - dashMatJAGastado)}</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--ink-3)"><span>Pendiente Mis compras</span><strong style="color:var(--ink);font-variant-numeric:tabular-nums;font-weight:500">${fmt(dashMisCompras - dashMisGastado)}</strong></div>
       </div>
     </div>
   `;
@@ -1263,11 +1356,11 @@ function renderDashboard() {
       const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
       const isPay = payDates.includes(dateStr);
       const isPaidPay = isPay && data.pagos.find(p => p.fecha === dateStr && p.pagado);
-      let bg = 'transparent', clr = 'var(--text)', brd = 'none', fw = '400';
-      if (isToday && isPay) { bg = '#1b4332'; clr = '#fff'; fw = '700'; brd = '2px solid #e8a817'; }
-      else if (isToday) { bg = '#1b4332'; clr = '#fff'; fw = '700'; }
-      else if (isPaidPay) { bg = '#d8f3dc'; clr = '#0d904f'; fw = '700'; }
-      else if (isPay) { bg = '#fef7e0'; clr = '#b06000'; fw = '700'; }
+      let bg = 'transparent', clr = 'var(--ink-2)', brd = 'none', fw = '400';
+      if (isToday && isPay) { bg = '#C96442'; clr = '#FAF9F5'; fw = '600'; brd = '1.5px solid #A84E33'; }
+      else if (isToday) { bg = '#1F1E1D'; clr = '#FAF9F5'; fw = '600'; }
+      else if (isPaidPay) { bg = '#E6EFE0'; clr = '#3F5A34'; fw = '600'; }
+      else if (isPay) { bg = '#F1DBD2'; clr = '#A84E33'; fw = '600'; }
       html += `<div style="font-size:11px;padding:2px 0;border-radius:50%;background:${bg};color:${clr};font-weight:${fw};border:${brd};line-height:1.5;min-width:22px">${d}</div>`;
     }
     html += '</div></div>';
@@ -1282,10 +1375,10 @@ function renderDashboard() {
       <div>${buildMiniCal(y1, m1)}</div>
       <div>${buildMiniCal(y2, m2)}</div>
     </div>
-    <div style="display:flex;gap:10px;justify-content:center;font-size:11px;margin-top:6px;flex-wrap:wrap">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1b4332;vertical-align:middle"></span> Hoy</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fef7e0;border:1px solid #e8a817;vertical-align:middle"></span> Pago</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d8f3dc;border:1px solid #0d904f;vertical-align:middle"></span> Pagado</span>
+    <div style="display:flex;gap:14px;justify-content:center;font-size:11px;margin-top:10px;flex-wrap:wrap;color:var(--ink-3)">
+      <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#1F1E1D;vertical-align:middle;margin-right:3px"></span>Hoy</span>
+      <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#F1DBD2;vertical-align:middle;margin-right:3px"></span>Pago</span>
+      <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#E6EFE0;vertical-align:middle;margin-right:3px"></span>Pagado</span>
     </div>`;
 
   // Timeline / key dates with delay tracking
@@ -1303,30 +1396,30 @@ function renderDashboard() {
   const finEsperado = semanasRetraso > 0 ? new Date(fin.getTime() + semanasRetraso * 7 * 24*60*60*1000) : fin;
 
   document.getElementById('dashTimeline').innerHTML = `
-    <div style="font-size:11px">
-      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
-        <span>Inicio</span><strong>${fmtDateLong(inicio)}</strong>
+    <div style="font-size:11.5px;color:var(--ink-2)">
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--ink-3)">Inicio</span><strong style="font-weight:500;color:var(--ink)">${fmtDateLong(inicio)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
-        <span>Fin planificado</span><strong>${fmtDateLong(fin)}</strong>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--ink-3)">Fin planificado</span><strong style="font-weight:500;color:var(--ink)">${fmtDateLong(fin)}</strong>
       </div>
-      ${semanasRetraso > 0 ? `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--danger)">
-        <span>Fin esperado</span><strong>${fmtDateLong(finEsperado)}</strong>
+      ${semanasRetraso > 0 ? `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--ink-3)">Fin esperado</span><strong style="color:var(--danger);font-weight:500">${fmtDateLong(finEsperado)}</strong>
       </div>
-      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--danger)">
-        <span>Retraso</span><strong>${semanasRetraso} sem.</strong>
-      </div>` : `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);color:var(--success)">
-        <span>Retraso</span><strong>Sin retraso</strong>
+      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--ink-3)">Retraso</span><strong style="color:var(--danger);font-weight:500">${semanasRetraso} sem.</strong>
+      </div>` : `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--ink-3)">Retraso</span><strong style="color:#5F7F55;font-weight:500">Sin retraso</strong>
       </div>`}
-      <div style="margin-top:6px;margin-bottom:4px">
-        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Tiempo</span><span>${diasTranscurridos}d / ${diasTotal}d (${pctTime}%)</span></div>
-        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--primary);border-radius:3px"></div></div>
+      <div style="margin-top:12px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px"><span style="color:var(--ink-3)">Tiempo</span><span style="color:var(--ink-3);font-variant-numeric:tabular-nums">${diasTranscurridos}d / ${diasTotal}d · ${pctTime}%</span></div>
+        <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${pctTime}%;background:var(--ink-3);border-radius:999px"></div></div>
       </div>
-      <div style="margin-bottom:4px">
-        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px"><span>Obra</span><span>${pctObra}%</span></div>
-        <div style="height:6px;background:#e8eaed;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:#52b788;border-radius:3px"></div></div>
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px"><span style="color:var(--ink-3)">Obra</span><span style="color:var(--ink-3);font-variant-numeric:tabular-nums">${pctObra}%</span></div>
+        <div style="height:5px;background:var(--cream-3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${pctObra}%;background:var(--primary);border-radius:999px"></div></div>
       </div>
-      <div style="text-align:center;padding:4px 0;font-weight:700;font-size:13px;color:${diasRestantes<=14?'var(--danger)':'var(--primary)'}">Quedan ${diasRestantes} días</div>
+      <div style="text-align:center;padding:10px 0;font-family:ui-serif,Georgia,serif;font-weight:500;font-size:18px;letter-spacing:-0.01em;color:${diasRestantes<=14?'var(--danger)':'var(--ink)'}">Quedan ${diasRestantes} días</div>
     </div>
   `;
 
@@ -1337,8 +1430,8 @@ function renderDashboard() {
     cat: 'Organización', concepto: t.name, coste: 0, estado: getTaskEstado(t), pagado: '-', isGanttOnly: true
   }));
   const combined = [...ganttOnlyTasks, ...allTasks];
-  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11px"><thead><tr><th style="padding:4px 6px">#</th><th style="padding:4px 6px">Cat.</th><th style="padding:4px 6px">Concepto</th><th style="padding:4px 6px">Coste</th><th style="padding:4px 6px">Estado</th></tr></thead><tbody>
-    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#fef7e0':t.estado==='Terminado'?'background:#e6f4ea':''}"><td style="padding:3px 6px">${i+1}</td><td style="padding:3px 6px;font-size:10px">${t.cat}</td><td style="padding:3px 6px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">${t.concepto}</td><td style="padding:3px 6px;white-space:nowrap">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:3px 6px">${estadoBadge(t.estado)}</td></tr>`).join('')}
+  document.getElementById('dashActiveTasks').innerHTML = `<div class="table-wrapper"><table style="font-size:11.5px"><thead><tr><th style="padding:6px 8px">#</th><th style="padding:6px 8px">Cat.</th><th style="padding:6px 8px">Concepto</th><th style="padding:6px 8px">Coste</th><th style="padding:6px 8px">Estado</th></tr></thead><tbody>
+    ${combined.map((t, i) => `<tr style="${t.estado==='En curso'?'background:#F4EAD0':t.estado==='Terminado'?'background:#E6EFE0':''}"><td style="padding:5px 8px;color:var(--ink-3)">${i+1}</td><td style="padding:5px 8px;font-size:10.5px;color:var(--ink-3)">${t.cat}</td><td style="padding:5px 8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:var(--ink-2)">${t.concepto}</td><td style="padding:5px 8px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)">${t.coste>0?fmt(t.coste):'-'}</td><td style="padding:5px 8px">${estadoBadge(t.estado)}</td></tr>`).join('')}
   </tbody></table></div>`;
 }
 
@@ -1364,16 +1457,16 @@ function renderPresupuesto() {
       <td style="font-size:11px">${p.quien}</td>
       <td>${data.ganttTasks.some(g=>g.presupId===p.id)
         ? '<span title="Controlado por Gantt">'+estadoBadge(p.estado)+'</span>'
-        : '<select class="estado-select" onchange="changeEstado('+i+', this.value)" style="background:'+(p.estado==='Terminado'?'#e6f4ea':p.estado==='En curso'?'#fef7e0':'#fce8e6')+'"><option '+(p.estado==='Sin empezar'?'selected':'')+'>Sin empezar</option><option '+(p.estado==='En curso'?'selected':'')+'>En curso</option><option '+(p.estado==='Terminado'?'selected':'')+'>Terminado</option></select>'
+        : '<select class="estado-select" onchange="changeEstado('+i+', this.value)" style="background:'+(p.estado==='Terminado'?'#E6EFE0':p.estado==='En curso'?'#F4EAD0':'#F1DBD2')+'"><option '+(p.estado==='Sin empezar'?'selected':'')+'>Sin empezar</option><option '+(p.estado==='En curso'?'selected':'')+'>En curso</option><option '+(p.estado==='Terminado'?'selected':'')+'>Terminado</option></select>'
       }</td>
       <td>
-        <select class="pago-select" onchange="changePagado(${i}, this.value)" style="background:${p.pagado==='Pagado'?'#e6f4ea':p.pagado==='Parcial'?'#fef7e0':'#e8f0fe'}">
+        <select class="pago-select" onchange="changePagado(${i}, this.value)" style="background:${p.pagado==='Pagado'?'#E6EFE0':p.pagado==='Parcial'?'#F4EAD0':'#E4E6ED'}">
           <option ${p.pagado==='Sin pagar'?'selected':''}>Sin pagar</option>
           <option ${p.pagado==='Parcial'?'selected':''}>Parcial</option>
           <option ${p.pagado==='Pagado'?'selected':''}>Pagado</option>
         </select>
       </td>
-      <td style="font-size:11px;max-width:180px;color:var(--text-secondary)" class="editable" onclick="editPresupField(${i},'comentario')">${p.comentario || '<span style=color:#ccc>+ comentario</span>'}</td>
+      <td style="font-size:11.5px;max-width:200px;color:var(--ink-3)" class="editable" onclick="editPresupField(${i},'comentario')">${p.comentario || '<span style="color:var(--ink-4);font-style:italic">+ comentario</span>'}</td>
       <td><button class="delete-row" onclick="deletePresupuesto(${i})" title="Eliminar">&times;</button></td>
     </tr>
   `).join('');
@@ -1481,7 +1574,7 @@ function renderGantt() {
   baseDate.setDate(baseDate.getDate() + diffToMonday);
 
   // Find min week across all tasks (to support negative weeks like Fase 0)
-  const allWeeks = data.ganttTasks.flatMap(t => t.weeks);
+  const allWeeks = data.ganttTasks.flatMap(t => Array.isArray(t.weeks) ? t.weeks : []);
   const minWeek = Math.min(...allWeeks, 1);
   const preWeeks = minWeek < 1 ? 1 - minWeek : 0;
 
@@ -1522,7 +1615,7 @@ function renderGantt() {
     const wn = weekNumbers[i];
     const label = wn <= 0 ? 'P' + (1 - wn) : 'S' + wn;
     const isCur = (i+1) === currentWeek;
-    html += `<th class="gantt-week-header ${isCur?'gantt-current-week':''}" style="${wn<=0?'background:#f0f7f2':''}">${label}<br><span class="gantt-date-header">${weekDates[i]}</span></th>`;
+    html += `<th class="gantt-week-header ${isCur?'gantt-current-week':''}" style="${wn<=0?'background:var(--cream-2)':''}">${label}<br><span class="gantt-date-header">${weekDates[i]}</span></th>`;
   }
   html += '<th>Estado</th></tr></thead><tbody>';
 
@@ -1533,9 +1626,10 @@ function renderGantt() {
     for (const task of tasks) {
       const estado = getTaskEstado(task);
       html += `<tr><td>${taskNum}</td><td style="font-size:11px">${task.name}</td>`;
+      const taskWeeks = Array.isArray(task.weeks) ? task.weeks : [];
       for (let i = 0; i < numWeeks; i++) {
         const wn = weekNumbers[i];
-        const hasBar = task.weeks.includes(wn);
+        const hasBar = taskWeeks.includes(wn);
         const isCurrent = (i+1) === currentWeek;
         if (hasBar) {
           const pattern = estado === 'Terminado' ? 'background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,0.3) 3px,rgba(255,255,255,0.3) 6px);' : '';
@@ -1825,28 +1919,28 @@ function openShareModal() {
     <h3>Compartir</h3>
     <div class="share-options">
       <div class="share-option" onclick="shareLink()">
-        <div class="share-icon" style="background:#d8f3dc;color:var(--primary)">🔗</div>
+        <div class="share-icon" style="background:#F1DBD2;color:var(--primary-dark)">🔗</div>
         <div class="share-option-text">
           <div class="share-option-title">Compartir link</div>
           <div class="share-option-desc">Copia el enlace para que cualquiera pueda ver y editar la reforma en tiempo real. Los cambios se sincronizan al instante.</div>
         </div>
       </div>
       <div class="share-option" onclick="shareFile()">
-        <div class="share-icon" style="background:#e8f0fe;color:var(--primary)">📄</div>
+        <div class="share-icon" style="background:#E4E6ED;color:#3D4A6B">📄</div>
         <div class="share-option-text">
           <div class="share-option-title">Generar archivo compartible</div>
           <div class="share-option-desc">Descarga un archivo HTML con todos los datos actuales para enviar por WhatsApp, email, etc.</div>
         </div>
       </div>
       <div class="share-option" onclick="exportJSON()">
-        <div class="share-icon" style="background:#e6f4ea;color:var(--success)">💾</div>
+        <div class="share-icon" style="background:#E6EFE0;color:#3F5A34">💾</div>
         <div class="share-option-text">
           <div class="share-option-title">Exportar datos (backup)</div>
           <div class="share-option-desc">Descarga un archivo JSON con todos los datos para backup.</div>
         </div>
       </div>
       <div class="share-option" onclick="importJSON()">
-        <div class="share-icon" style="background:#fef7e0;color:var(--warning)">📥</div>
+        <div class="share-icon" style="background:#F4EAD0;color:#7A5A14">📥</div>
         <div class="share-option-text">
           <div class="share-option-title">Importar datos</div>
           <div class="share-option-desc">Carga un archivo JSON exportado previamente.</div>
