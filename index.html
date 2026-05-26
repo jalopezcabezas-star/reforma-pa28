@@ -687,6 +687,21 @@ select.estado-select:focus, select.pago-select:focus {
 }
 .delete-row:hover { opacity: 1; color: var(--danger); background: var(--accent); }
 
+.edit-row {
+  background: none;
+  border: none;
+  color: var(--ink-4);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  opacity: 0.7;
+  transition: all 0.15s;
+  margin-right: 6px;
+}
+.edit-row:hover { opacity: 1; color: var(--primary); background: var(--accent); }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .content { padding: 8px; }
@@ -1698,6 +1713,7 @@ function renderPagos() {
           <div class="payment-date">${fmtDate(p.fecha)}</div>
         </div>
         <div class="payment-amount" style="color:${p.pagado ? 'var(--success)' : 'var(--text)'}">${fmt(p.importe)}</div>
+        <button class="edit-row" onclick="event.stopPropagation(); editPago(${p.id})" title="Editar fecha e importe">Editar</button>
         <div class="check-circle ${p.pagado ? 'checked' : ''}"></div>
       </div>
     `).join('')}
@@ -1779,6 +1795,30 @@ function togglePago(id) {
     saveData(); renderAll();
     showToast(pago.pagado ? 'Pago ' + id + ' marcado como pagado' : 'Pago ' + id + ' desmarcado');
   }
+}
+
+function editPago(id) {
+  const pago = data.pagos.find(p => p.id === id);
+  if (!pago) return;
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Editar Pago ${pago.id}${pago.isLast ? ' (último - ajuste)' : ''}</h3>
+    <div class="modal-field"><label>Fecha</label><input type="date" id="pagoFecha" value="${pago.fecha || ''}"></div>
+    <div class="modal-field"><label>Importe (EUR)</label><input type="number" id="pagoImporte" step="0.01" value="${pago.importe ?? 0}"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveEditPago(${id})">Guardar</button>
+    </div>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function saveEditPago(id) {
+  const pago = data.pagos.find(p => p.id === id);
+  if (!pago) return;
+  pago.fecha = document.getElementById('pagoFecha').value;
+  pago.importe = parseFloat(document.getElementById('pagoImporte').value) || 0;
+  saveData(); closeModal(); renderAll();
+  showToast('Pago ' + id + ' actualizado');
 }
 
 function renderCalendar() {
