@@ -1713,10 +1713,10 @@ function renderPagos() {
     ${data.pagos.map(p => `
       <div class="payment-item ${p.pagado ? 'paid' : ''}" onclick="togglePago(${p.id})">
         <div class="payment-info">
-          <div class="payment-num">Pago ${p.id} ${p.isLast ? '(último - ajuste)' : ''}</div>
+          <div class="payment-num">Pago ${p.id} ${p.isLast ? '(último - liquidación pendiente)' : ''}</div>
           <div class="payment-date">${fmtDate(p.fecha)}</div>
         </div>
-        <div class="payment-amount" style="color:${p.pagado ? 'var(--success)' : 'var(--text)'}">${fmt(p.importe)}</div>
+        <div class="payment-amount" style="color:${p.pagado ? 'var(--success)' : 'var(--text)'}">${p.isLast && !p.pagado ? 'Por determinar' : fmt(p.importe)}</div>
         <button class="edit-row" onclick="event.stopPropagation(); editPago(${p.id})" title="Editar fecha e importe">Editar</button>
         <div class="check-circle ${p.pagado ? 'checked' : ''}"></div>
       </div>
